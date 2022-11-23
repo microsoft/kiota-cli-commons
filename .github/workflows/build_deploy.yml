@@ -1,0 +1,56 @@
+name: Build and deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths: ['/src/**', '.github/workflows/**', 'Microsoft.Kiota.Cli.Commons.sln']
+  pull_request:
+    paths: ['/src/**', '.github/workflows/**', 'Microsoft.Kiota.Cli.Commons.sln']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore -c Release
+      - name: Test
+        run: dotnet test --no-build --verbosity normal -c Release /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=opencover
+      - name: Publish
+        run: dotnet publish --no-restore --no-build --verbosity normal -c Release
+      - name: Pack
+        run: dotnet pack --no-restore --no-build --verbosity normal -c Release
+      - name: Upload Coverage Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: codeCoverage
+          path: |
+            src/Microsoft.Kiota.Cli.Commons.Tests/TestResults
+      - name: Upload Nuget Package
+        uses: actions/upload-artifact@v3
+        with:
+          name: drop
+          path: |
+            src/Microsoft.Kiota.Cli.Commons/bin/Release/*.nupkg
+  deploy:
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    environment:
+      name: staging_feeds
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.x
+      - uses: actions/download-artifact@v3
+        with:
+          name: drop
+      - run: dotnet nuget push "*.nupkg" --skip-duplicate -s https://nuget.pkg.github.com/microsoft/index.json -k ${{ secrets.PUBLISH_GH_TOKEN }}

@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <RepositoryUrl>https://github.com/microsoft/kiota</RepositoryUrl>
+    <RepositoryUrl>https://github.com/microsoft/kiota-cli-commons</RepositoryUrl>
     <Version>0.1.10-preview.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

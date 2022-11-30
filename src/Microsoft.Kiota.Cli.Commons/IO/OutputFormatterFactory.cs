@@ -1,3 +1,5 @@
+using System;
+
 namespace Microsoft.Kiota.Cli.Commons.IO;
 
 /// <inheritdoc />

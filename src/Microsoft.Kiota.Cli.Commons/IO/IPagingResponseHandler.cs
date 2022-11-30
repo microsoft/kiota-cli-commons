@@ -1,4 +1,9 @@
-﻿using Microsoft.Kiota.Abstractions;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Kiota.Abstractions;
 
 namespace Microsoft.Kiota.Cli.Commons.IO;
 

@@ -1,5 +1,8 @@
 ﻿using System.CommandLine;
+using System.IO;
 using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 using Spectre.Console;
 
 namespace Microsoft.Kiota.Cli.Commons.IO;

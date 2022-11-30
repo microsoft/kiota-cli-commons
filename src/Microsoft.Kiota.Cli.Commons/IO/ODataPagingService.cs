@@ -1,8 +1,11 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Microsoft.Kiota.Abstractions;
-using Microsoft.Kiota.Abstractions.Serialization;
+using System.Threading;
+using System.Threading.Tasks;
 
 [assembly: InternalsVisibleTo("Microsoft.Kiota.Cli.Commons.Tests")]
 namespace Microsoft.Kiota.Cli.Commons.IO;

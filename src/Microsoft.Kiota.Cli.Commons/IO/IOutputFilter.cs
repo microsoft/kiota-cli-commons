@@ -1,4 +1,8 @@
-﻿namespace Microsoft.Kiota.Cli.Commons.IO;
+﻿using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Microsoft.Kiota.Cli.Commons.IO;
 
 /// <summary>
 /// Output filter contract. Implement this to provide output filtering capabilities to the CLI.

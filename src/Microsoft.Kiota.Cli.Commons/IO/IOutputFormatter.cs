@@ -1,4 +1,8 @@
-﻿namespace Microsoft.Kiota.Cli.Commons.IO;
+﻿using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Microsoft.Kiota.Cli.Commons.IO;
 
 /// <summary>
 /// Output formatter contract.

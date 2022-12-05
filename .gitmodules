@@ -1,0 +1,3 @@
+[submodule "kiota-abstractions-dotnet"]
+	path = kiota-abstractions-dotnet
+	url = https://github.com/microsoft/kiota-abstractions-dotnet

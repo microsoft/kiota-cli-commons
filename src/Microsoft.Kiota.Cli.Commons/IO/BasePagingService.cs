@@ -20,7 +20,7 @@ public abstract class BasePagingService : IPagingService
     public abstract Task<Uri?> GetNextPageLinkAsync(PageLinkData pageLinkData, CancellationToken cancellationToken = default);
 
     /// <inheritdoc />
-    public virtual async Task<PageResponse?> GetPagedDataAsync(Func<RequestInformation, IResponseHandler, CancellationToken, Task> requestExecutorAsync, PageLinkData pageLinkData, bool fetchAllPages = false, CancellationToken cancellationToken = default)
+    public virtual async Task<PageResponse?> GetPagedDataAsync(Func<RequestInformation, CancellationToken, Task> requestExecutorAsync, PageLinkData pageLinkData, bool fetchAllPages = false, CancellationToken cancellationToken = default)
     {
         if (!OnBeforeGetPagedData(pageLinkData, fetchAllPages))
         {
@@ -34,7 +34,8 @@ public abstract class BasePagingService : IPagingService
         do
         {
             var responseHandler = CreateResponseHandler();
-            await requestExecutorAsync(requestInfo, responseHandler, cancellationToken);
+            requestInfo.SetResponseHandler(responseHandler);
+            await requestExecutorAsync(requestInfo, cancellationToken);
             var pageData = await responseHandler.GetResponseStreamAsync(cancellationToken);
             statusCode = responseHandler.GetStatusCode();
             var headers = responseHandler.GetResponseHeaders();

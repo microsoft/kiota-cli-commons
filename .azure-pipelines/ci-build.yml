@@ -253,7 +253,7 @@ stages:
   condition: and(contains(variables['build.sourceBranch'], 'refs/heads/main'), succeeded())
   dependsOn: build
   jobs:
-    - deployment: deploy_dotnet_abstractions
+    - deployment: deploy_cli_commons
       dependsOn: []
       environment: nuget-org
       strategy:

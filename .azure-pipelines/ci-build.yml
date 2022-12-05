@@ -240,7 +240,7 @@ stages:
         condition: and(contains(variables['build.sourceBranch'], 'refs/heads/main'), succeeded())
         inputs:
           SourceFolder: '$(Build.SourcesDirectory)'
-          Contents: 'kiota-abstractions-dotnet\scripts\**'
+          Contents: 'scripts\**'
           TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
       - task: PublishPipelineArtifact@1
@@ -271,7 +271,7 @@ stages:
               displayName: 'Extract release information to pipeline'
               inputs:
                 targetType: 'filePath'
-                filePath: $(Pipeline.Workspace)\Nugets\kiota-abstractions-dotnet\scripts\GetNugetPackageVersion.ps1
+                filePath: $(Pipeline.Workspace)\Nugets\scripts\GetNugetPackageVersion.ps1
                 pwsh: true
                 arguments: '-packageDirPath "$(Pipeline.Workspace)/Nugets/"'
             - task: NuGetCommand@2

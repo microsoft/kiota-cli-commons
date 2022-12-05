@@ -254,7 +254,6 @@ stages:
   dependsOn: build
   jobs:
     - deployment: deploy_cli_commons
-      dependsOn: []
       environment: nuget-org
       strategy:
         runOnce:

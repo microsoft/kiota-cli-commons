@@ -33,7 +33,7 @@ public class BasePagingServiceTest
             responseHandlerMock.Setup(h => h.GetStatusCode()).Returns(200);
 
             pagingServiceMock.Setup(ps => ps.CreateResponseHandler()).Returns(responseHandlerMock.Object);
-            pagingServiceMock.Setup(ps => ps.GetPagedDataAsync(It.IsAny<Func<RequestInformation, IResponseHandler, CancellationToken, Task>>(), It.IsAny<PageLinkData>(), It.IsAny<bool>(), default)).CallBase();
+            pagingServiceMock.Setup(ps => ps.GetPagedDataAsync(It.IsAny<Func<RequestInformation, CancellationToken, Task>>(), It.IsAny<PageLinkData>(), It.IsAny<bool>(), default)).CallBase();
             pagingServiceMock.Setup(ps => ps.OnBeforeGetPagedData(It.IsAny<PageLinkData>(), It.IsAny<bool>())).CallBase();
             pagingServiceMock.Setup(ps => ps.MergePageAsync(It.IsAny<Stream?>(), It.IsAny<PageLinkData>(), default)).ReturnsAsync(streamMerged);
             pagingServiceMock.Setup(ps => ps.GetNextPageLinkAsync(It.IsAny<PageLinkData>(), default)).Returns(Task.FromResult<Uri?>(null));
@@ -48,7 +48,7 @@ public class BasePagingServiceTest
 
             var pagingService = pagingServiceMock.Object;
 
-            var response = await pagingService.GetPagedDataAsync((info, handler, token) => Task.CompletedTask, pagingData);
+            var response = await pagingService.GetPagedDataAsync((info, token) => Task.CompletedTask, pagingData);
 
             pagingServiceMock.Verify(ps => ps.OnBeforeGetPagedData(pagingData, false), Times.Once);
         }
@@ -60,7 +60,7 @@ public class BasePagingServiceTest
             var pagingData = new PageLinkData(requestInfo, null);
             var pagingService = pagingServiceMock.Object;
 
-            var response = await pagingService.GetPagedDataAsync((info, handler, token) => Task.CompletedTask, pagingData);
+            var response = await pagingService.GetPagedDataAsync((info, token) => Task.CompletedTask, pagingData);
 
             Assert.Equal(200, response?.StatusCode);
             Assert.Equal(streamMerged, response?.Response);
@@ -85,7 +85,7 @@ public class BasePagingServiceTest
                 return new Uri("https://testlink");
             });
 
-            var response = await pagingService.GetPagedDataAsync((info, handler, token) => Task.CompletedTask, pagingData, true);
+            var response = await pagingService.GetPagedDataAsync((info, token) => Task.CompletedTask, pagingData, true);
 
             Assert.Equal(200, response?.StatusCode);
             Assert.Equal(streamMerged, response?.Response);

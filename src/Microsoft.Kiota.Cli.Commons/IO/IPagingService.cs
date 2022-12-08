@@ -32,7 +32,7 @@ public interface IPagingService
     /// <param name="pageLinkData">Metadata that is used when fetching paging data</param>
     /// <param name="fetchAllPages">If this is true, the result will be a stream with all available pages</param>
     /// <param name="cancellationToken">The cancellation token</param>
-    Task<PageResponse?> GetPagedDataAsync(Func<RequestInformation, IResponseHandler, CancellationToken, Task> requestExecutorAsync, PageLinkData pageLinkData, bool fetchAllPages = false, CancellationToken cancellationToken = default);
+    Task<PageResponse?> GetPagedDataAsync(Func<RequestInformation, CancellationToken, Task> requestExecutorAsync, PageLinkData pageLinkData, bool fetchAllPages = false, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Merges any new page received on each page request.

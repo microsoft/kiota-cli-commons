@@ -20,6 +20,7 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   ProductBinPath: '$(Build.SourcesDirectory)\src\bin\$(BuildConfiguration)'
+  ProjectFile: '$(Build.SourcesDirectory)/src/Microsoft.Kiota.Cli.Commons/Microsoft.Kiota.Cli.Commons.csproj'
 
 
 stages:
@@ -54,7 +55,7 @@ stages:
         inputs:
           targetType: filePath
           filePath: 'scripts\EnableSigning.ps1'
-          arguments: '-projectPath "$(Build.SourcesDirectory)/src/Microsoft.Kiota.Cli.Commons.csproj"'
+          arguments: '-projectPath "$(ProjectFile)"'
           pwsh: true
         enabled: true
 
@@ -182,7 +183,7 @@ stages:
           SessionTimeout: 20
 
       # arguments are not parsed in DotNetCoreCLI@2 task for `pack` command, that's why we have a custom pack command here
-      - pwsh: dotnet pack $env:BUILD_SOURCESDIRECTORY/src/Microsoft.Kiota.Cli.Commons.csproj /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg --no-build --output $env:BUILD_ARTIFACTSTAGINGDIRECTORY --configuration $env:BUILD_CONFIGURATION
+      - pwsh: dotnet pack "$(ProjectFile)" /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg --no-build --output $env:BUILD_ARTIFACTSTAGINGDIRECTORY --configuration $env:BUILD_CONFIGURATION
         env:
           BUILD_CONFIGURATION: $(BuildConfiguration)
         displayName: Dotnet pack
@@ -193,7 +194,7 @@ stages:
         inputs:
           targetType: 'filePath'
           filePath: $(System.DefaultWorkingDirectory)\scripts\ValidateProjectVersionUpdated.ps1
-          arguments: '-projectPath "$(Build.SourcesDirectory)/src/Microsoft.Kiota.Cli.Commons.csproj" -packageName "Microsoft.Kiota.Cli.Commons"'
+          arguments: '-projectPath "$(ProjectFile)" -packageName "Microsoft.Kiota.Cli.Commons"'
           pwsh: true
 
       - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1

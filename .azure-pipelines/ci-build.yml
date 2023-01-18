@@ -33,9 +33,9 @@ stages:
         submodules: true
 
       - task: UseDotNet@2
-        displayName: 'Use .NET 6'
+        displayName: 'Use .NET 7'
         inputs:
-          version: 6.x
+          version: 7.x
 
       - task: PoliCheck@1
         displayName: 'Run PoliCheck "/src"'

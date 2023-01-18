@@ -42,12 +42,6 @@ stages:
           inputType: CmdLine
           cmdLineArgs: '/F:$(Build.SourcesDirectory)/src /T:9 /Sev:"1|2" /PE:2 /O:poli_result_src.xml'
 
-      - task: PoliCheck@1
-        displayName: 'Run PoliCheck "/Microsoft.Kiota.Cli.Commons.Tests"'
-        inputs:
-          inputType: CmdLine
-          cmdLineArgs: '/F:$(Build.SourcesDirectory)/Microsoft.Kiota.Cli.Commons.Tests /T:9 /Sev:"1|2" /PE:2 /O:poli_result_test.xml'
-          
       # Install the nuget tool.
       - task: NuGetToolInstaller@1
         displayName: 'Install Nuget dependency manager'
@@ -84,14 +78,7 @@ stages:
         displayName: 'Run CredScan - Src'
         inputs:
           toolMajorVersion: 'V2'
-          scanFolder: '$(Build.SourcesDirectory)\src'
-          debugMode: false
-
-      - task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@2
-        displayName: 'Run CredScan - Test'
-        inputs:
-          toolMajorVersion: 'V2'
-          scanFolder: '$(Build.SourcesDirectory)\Microsoft.Kiota.Cli.Commons.Tests'
+          scanFolder: '$(Build.SourcesDirectory)'
           debugMode: false
 
       - task: AntiMalware@3
@@ -104,7 +91,7 @@ stages:
         displayName: 'Run BinSkim - Product Binaries'
         inputs:
           InputType: Basic
-          AnalyzeTarget: '$(ProductBinPath)\**\Microsoft.Kiota.Cli.Commons.dll'
+          AnalyzeTarget: '$(ProductBinPath)\**\*.dll'
           AnalyzeSymPath: '$(ProductBinPath)'
           AnalyzeVerbose: true
           AnalyzeHashes: true

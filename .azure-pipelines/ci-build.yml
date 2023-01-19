@@ -19,7 +19,7 @@ pool:
 variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  ProductBinPath: '$(Build.SourcesDirectory)\src\bin\$(BuildConfiguration)'
+  ProductBinPath: '$(Build.SourcesDirectory)\src\Microsoft.Kiota.Cli.Commons\bin\$(BuildConfiguration)'
   ProjectFile: '$(Build.SourcesDirectory)/src/Microsoft.Kiota.Cli.Commons/Microsoft.Kiota.Cli.Commons.csproj'
 
 

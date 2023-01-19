@@ -52,11 +52,20 @@ stages:
           checkLatest: true
 
       - task: PowerShell@2
-        displayName: 'Enable signing'
+        displayName: 'Enable library signing'
         inputs:
           targetType: filePath
           filePath: 'scripts\EnableSigning.ps1'
           arguments: '-projectPath "$(ProjectFile)"'
+          pwsh: true
+        enabled: true
+
+      - task: PowerShell@2
+        displayName: 'Enable tests signing'
+        inputs:
+          targetType: filePath
+          filePath: 'scripts\EnableSigning.ps1'
+          arguments: '-projectPath "$(Build.SourcesDirectory)src/Microsoft.Kiota.Cli.Commons.Tests/Microsoft.Kiota.Cli.Commons.Tests.csproj"'
           pwsh: true
         enabled: true
 

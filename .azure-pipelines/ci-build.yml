@@ -92,7 +92,7 @@ stages:
         displayName: 'Run BinSkim - Product Binaries'
         inputs:
           InputType: Basic
-          AnalyzeTargetBinskim: '$(ProductBinPath)\**\*.dll'
+          AnalyzeTargetGlob: '$(ProductBinPath)\**\*.dll'
           AnalyzeSymPath: '$(ProductBinPath)'
           AnalyzeVerbose: true
           AnalyzeHashes: true

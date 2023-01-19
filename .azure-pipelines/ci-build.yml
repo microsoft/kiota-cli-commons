@@ -180,7 +180,7 @@ stages:
           SessionTimeout: 20
 
       # arguments are not parsed in DotNetCoreCLI@2 task for `pack` command, that's why we have a custom pack command here
-      - pwsh: dotnet pack "$(ProjectFile)" /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg --no-build --output $env:BUILD_ARTIFACTSTAGINGDIRECTORY --configuration $env:BUILD_CONFIGURATION
+      - pwsh: dotnet pack "$(ProjectFile)" /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg --no-build --output $env:BUILD_ARTIFACTSTAGINGDIRECTORY/Nugets --configuration $env:BUILD_CONFIGURATION
         env:
           BUILD_CONFIGURATION: $(BuildConfiguration)
         displayName: Dotnet pack
@@ -198,7 +198,7 @@ stages:
         displayName: 'ESRP CodeSigning Nuget Packages'
         inputs:
           ConnectedServiceName: 'microsoftgraph ESRP CodeSign DLL and NuGet (AKV)'
-          FolderPath: '$(Build.ArtifactStagingDirectory)'
+          FolderPath: '$(Build.ArtifactStagingDirectory)/Nugets'
           Pattern: '*.nupkg'
           signConfigType: inlineSignParams
           inlineOperation: |
@@ -226,13 +226,13 @@ stages:
         inputs:
           SourceFolder: '$(Build.SourcesDirectory)'
           Contents: 'scripts\**'
-          TargetFolder: '$(Build.ArtifactStagingDirectory)'
+          TargetFolder: '$(Build.ArtifactStagingDirectory)/Nugets'
 
       - task: PublishPipelineArtifact@1
         displayName: 'Upload Artifact: Nugets'
         inputs:
           artifactName: Nugets
-          targetPath: $(Build.ArtifactStagingDirectory)
+          targetPath: $(Build.ArtifactStagingDirectory)/Nugets
 
 - stage: deploy
   condition: and(contains(variables['build.sourceBranch'], 'refs/heads/main'), succeeded())

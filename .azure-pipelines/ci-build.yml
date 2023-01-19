@@ -88,11 +88,11 @@ stages:
           FileDirPath: '$(ProductBinPath)'
         enabled: false
 
-      - task: BinSkim@3
+      - task: BinSkim@4
         displayName: 'Run BinSkim - Product Binaries'
         inputs:
           InputType: Basic
-          AnalyzeTarget: '$(ProductBinPath)\**\*.dll'
+          AnalyzeTargetGlob: '$(ProductBinPath)\**\*.dll'
           AnalyzeSymPath: '$(ProductBinPath)'
           AnalyzeVerbose: true
           AnalyzeHashes: true

@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Kiota.Abstractions;
 
-[assembly: InternalsVisibleTo("Microsoft.Kiota.Cli.Commons.Tests")]
 namespace Microsoft.Kiota.Cli.Commons.IO;
 
 /// <summary>

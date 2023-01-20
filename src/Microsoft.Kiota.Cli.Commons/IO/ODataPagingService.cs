@@ -7,7 +7,6 @@ using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 
-[assembly: InternalsVisibleTo("Microsoft.Kiota.Cli.Commons.Tests")]
 namespace Microsoft.Kiota.Cli.Commons.IO;
 
 /// <summary>

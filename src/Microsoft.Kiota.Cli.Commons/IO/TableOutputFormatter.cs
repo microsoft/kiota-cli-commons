@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Spectre.Console;
 using Spectre.Console.Rendering;
 
-[assembly: InternalsVisibleTo("Microsoft.Kiota.Cli.Commons.Tests")]
 namespace Microsoft.Kiota.Cli.Commons.IO;
 
 /// <summary>

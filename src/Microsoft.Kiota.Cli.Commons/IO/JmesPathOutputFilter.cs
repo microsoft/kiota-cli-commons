@@ -25,7 +25,8 @@ public class JmesPathOutputFilter : IOutputFilter
     }
 
     /// <inheritdoc />
-    public async Task<Stream> FilterOutputAsync(Stream content, string query, CancellationToken cancellationToken = default) {
+    public async Task<Stream> FilterOutputAsync(Stream? content, string? query, CancellationToken cancellationToken = default) {
+        if (content == null || content == Stream.Null) return Stream.Null;
         if (string.IsNullOrEmpty(query)) return content;
         cancellationToken.ThrowIfCancellationRequested();
         using var reader = new StreamReader(content);

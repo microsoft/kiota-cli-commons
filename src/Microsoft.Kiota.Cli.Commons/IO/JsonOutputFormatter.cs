@@ -34,7 +34,7 @@ public class JsonOutputFormatter : IOutputFormatter
     public async Task WriteOutputAsync(Stream? content, IOutputFormatterOptions? options = null, CancellationToken cancellationToken = default)
     {
         string resultStr;
-        if (content == null)
+        if (content == null || content == Stream.Null)
         {
             return;
         }

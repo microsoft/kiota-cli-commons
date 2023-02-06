@@ -2,6 +2,7 @@ using System;
 using System.CommandLine.Binding;
 using System.CommandLine.Builder;
 using System.CommandLine.Invocation;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Kiota.Abstractions;
 using Microsoft.Kiota.Cli.Commons.IO;
 
@@ -19,8 +20,7 @@ public static class CommandBuilderExtensions
     {
         builder.AddMiddleware(async (context, next) =>
         {
-            var requestAdapter = builderFactory.Invoke(context);
-            if (requestAdapter != null)
+            if (builderFactory.Invoke(context) is IRequestAdapter requestAdapter)
             {
                 context.BindingContext.AddService(typeof(IRequestAdapter), p => requestAdapter);
             }
@@ -34,7 +34,7 @@ public static class CommandBuilderExtensions
     /// <summary>
     /// Registers an instance of IRequestAdapter.
     /// </summary>
-    public static CommandLineBuilder UseRequestAdapter(this CommandLineBuilder builder, IRequestAdapter requestAdapter)
+    public static CommandLineBuilder UseRequestAdapter(this CommandLineBuilder builder, [NotNull] IRequestAdapter requestAdapter)
     {
         builder.AddMiddleware(async (context, next) =>
         {

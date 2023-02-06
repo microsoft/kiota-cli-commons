@@ -5,6 +5,7 @@ using System.CommandLine.Parsing;
 using System.Threading.Tasks;
 using Microsoft.Kiota.Abstractions;
 using Microsoft.Kiota.Cli.Commons.Extensions;
+using Microsoft.Kiota.Cli.Commons.IO;
 using Moq;
 using Xunit;
 
@@ -45,5 +46,32 @@ public class CommandBuilderExtensionTests {
 
         Assert.NotNull(foundAdapter);
         Assert.Equal(adapterMock.Object, foundAdapter);
+    }
+
+    [Fact]
+    public async Task RegisterCommonServicesRegistersServicesAsync()
+    {
+        object? foundFmtFactory = null;
+        object? foundFilter = null;
+        object? foundPagingSvc = null;
+        var command = new Command("test");
+        command.SetHandler(ctx => {
+            foundFmtFactory = ctx.BindingContext.GetService(typeof(IOutputFormatterFactory));
+            foundFilter = ctx.BindingContext.GetService(typeof(IOutputFilter));
+            foundPagingSvc = ctx.BindingContext.GetService(typeof(IPagingService));
+        });
+        var parser = new CommandLineBuilder(command)
+            .RegisterCommonServices()
+            .Build();
+
+        var result = parser.Parse("test");
+        await result.InvokeAsync();
+
+        Assert.NotNull(foundFmtFactory);
+        Assert.IsType<OutputFormatterFactory>(foundFmtFactory);
+        Assert.NotNull(foundFilter);
+        Assert.IsType<JmesPathOutputFilter>(foundFilter);
+        Assert.NotNull(foundPagingSvc);
+        Assert.IsType<ODataPagingService>(foundPagingSvc);
     }
 }

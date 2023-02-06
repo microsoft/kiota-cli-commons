@@ -8,7 +8,7 @@ using Microsoft.Kiota.Cli.Commons.IO;
 namespace Microsoft.Kiota.Cli.Commons.Extensions;
 
 /// <summary>
-/// Extensions on a CommandBuilder
+/// Extensions on <see cref="CommandLineBuilder"/>
 /// </summary>
 public static class CommandBuilderExtensions
 {
@@ -47,9 +47,9 @@ public static class CommandBuilderExtensions
     /// <summary>
     /// Registers the default common implementations of
     /// <see cref="IOutputFormatterFactory"></see>,
-    /// <see cref="IOutputFilter"></see> and <see cref="IPagingService"></see>
-    /// with the <see cref="CommandLineBuilder"></see>'s
-    /// <see cref="BindingContext"></see>.
+    /// <see cref="IOutputFilter"/> and <see cref="IPagingService"/>
+    /// with the <see cref="CommandLineBuilder"/>'s
+    /// <see cref="BindingContext"/>.
     /// <example>
     /// Given an invocation context, one can get an output filter by writing:
     /// <code>

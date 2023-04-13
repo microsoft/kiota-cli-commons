@@ -33,7 +33,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JmesPath.Net" Version="1.0.304" />
+    <PackageReference Include="JmesPath.Net" Version="1.0.308" />
     <PackageReference Include="Microsoft.Kiota.Abstractions" Version="1.1.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
     <PackageReference Include="Spectre.Console" Version="0.46.0" />

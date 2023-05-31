@@ -62,7 +62,7 @@ public class ODataPagingService : BasePagingService
         return true;
     }
 
-    private bool IsJson(PageLinkData pageLinkData)
+    private static bool IsJson(PageLinkData pageLinkData)
     {
         return pageLinkData.ResponseContentHeaders.TryGetValue("Content-Type", out var contentType) && contentType.Any(c => c.Contains("json"));
     }
@@ -85,9 +85,9 @@ public class ODataPagingService : BasePagingService
         }
 
         JsonNode? nodeLeft = JsonNode.Parse(left);
-        if (left.CanSeek == true) left.Seek(0, SeekOrigin.Begin);
+        if (left.CanSeek) left.Seek(0, SeekOrigin.Begin);
         JsonNode? nodeRight = JsonNode.Parse(right);
-        if (right.CanSeek == true) right.Seek(0, SeekOrigin.Begin);
+        if (right.CanSeek) right.Seek(0, SeekOrigin.Begin);
 
         JsonArray? leftArray = null;
         JsonArray? rightArray = null;

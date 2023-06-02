@@ -43,12 +43,12 @@ public class JsonOutputFormatter : IOutputFormatter
         {
             using var result = await ProcessJsonAsync(content, jsonOptions.OutputIndented, cancellationToken);
             using var r = new StreamReader(result);
-            resultStr = await r.ReadToEndAsync();
+            resultStr = await r.ReadToEndAsync(cancellationToken);
         }
         else
         {
             using var reader = new StreamReader(content);
-            resultStr = await reader.ReadToEndAsync();
+            resultStr = await reader.ReadToEndAsync(cancellationToken);
         }
 
         _ansiConsole.WriteLine(resultStr);

@@ -28,9 +28,8 @@ public class JmesPathOutputFilter : IOutputFilter
     public async Task<Stream> FilterOutputAsync(Stream? content, string? query, CancellationToken cancellationToken = default) {
         if (content == null || content == Stream.Null) return Stream.Null;
         if (string.IsNullOrEmpty(query)) return content;
-        cancellationToken.ThrowIfCancellationRequested();
         using var reader = new StreamReader(content);
-        var strContent = await reader.ReadToEndAsync();
+        var strContent = await reader.ReadToEndAsync(cancellationToken);
         cancellationToken.ThrowIfCancellationRequested();
         var filtered = jmesPath.Transform(strContent, query);
         cancellationToken.ThrowIfCancellationRequested();

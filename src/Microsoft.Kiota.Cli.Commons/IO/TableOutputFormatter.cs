@@ -61,9 +61,8 @@ public class TableOutputFormatter : IOutputFormatter
         {
             table.AddColumn(propertyName, column =>
             {
-                if (firstElement.ValueKind == JsonValueKind.Object)
+                if (firstElement.ValueKind == JsonValueKind.Object && firstElement.TryGetProperty(propertyName, out var property))
                 {
-                    var hasProp = firstElement.TryGetProperty(propertyName, out var property);
                     if (property.ValueKind == JsonValueKind.Number)
                         column.RightAligned().PadLeft(10);
                 }

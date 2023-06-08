@@ -21,6 +21,7 @@ public class OutputFormatterFactoryTest
         [InlineData(FormatterType.JSON, typeof(JsonOutputFormatter))]
         [InlineData(FormatterType.TABLE, typeof(TableOutputFormatter))]
         [InlineData(FormatterType.TEXT, typeof(TextOutputFormatter))]
+        [InlineData(FormatterType.NONE, typeof(NoneOutputFormatter))]
         public void Return_OutputFormatter_On_FormatterType(FormatterType formatterType, Type expectedType)
         {
             var factory = new OutputFormatterFactory();
@@ -38,6 +39,8 @@ public class OutputFormatterFactoryTest
         [InlineData("TABLE", typeof(TableOutputFormatter))]
         [InlineData("text", typeof(TextOutputFormatter))]
         [InlineData("TEXT", typeof(TextOutputFormatter))]
+        [InlineData("none", typeof(NoneOutputFormatter))]
+        [InlineData("NONE", typeof(NoneOutputFormatter))]
         public void Return_OutputFormatter_On_FormatterType_String(string formatterType, Type expectedType)
         {
             var factory = new OutputFormatterFactory();

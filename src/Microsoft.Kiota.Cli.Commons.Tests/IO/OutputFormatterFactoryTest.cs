@@ -10,7 +10,16 @@ public class OutputFormatterFactoryTest
     {
         [Theory]
         [InlineData((FormatterType)20)]
-        public void ThrowException_On_Invalid_FormatterType(FormatterType formatterType)
+        public void ThrowException_On_Invalid_Enum_FormatterType(FormatterType formatterType)
+        {
+            var factory = new OutputFormatterFactory();
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => factory.GetFormatter(formatterType));
+        }
+
+        [Theory]
+        [InlineData("invalid")]
+        public void ThrowException_On_Invalid_String_FormatterType(string formatterType)
         {
             var factory = new OutputFormatterFactory();
 

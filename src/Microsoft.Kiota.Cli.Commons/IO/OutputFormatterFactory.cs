@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace Microsoft.Kiota.Cli.Commons.IO;
 
@@ -13,7 +13,8 @@ public sealed class OutputFormatterFactory : IOutputFormatterFactory
             FormatterType.JSON => new JsonOutputFormatter(),
             FormatterType.TABLE => new TableOutputFormatter(),
             FormatterType.TEXT => new TextOutputFormatter(),
-            _ => throw new NotSupportedException(),
+            FormatterType.NONE => new NoneOutputFormatter(),
+            _ => throw new ArgumentOutOfRangeException(nameof(formatterType), formatterType, "The formatter type specified is not valid. Ensure any new formatters are registered with the OutputFormatterFactory"),
         };
     }
 

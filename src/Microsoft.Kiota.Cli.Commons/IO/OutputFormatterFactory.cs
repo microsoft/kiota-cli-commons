@@ -1,10 +1,12 @@
-using System;
+﻿using System;
 
 namespace Microsoft.Kiota.Cli.Commons.IO;
 
 /// <inheritdoc />
 public sealed class OutputFormatterFactory : IOutputFormatterFactory
 {
+    private const string INVALID_FORMATTER_ERROR = "The formatter type specified is not valid. Ensure any new formatters are registered with the OutputFormatterFactory";
+
     /// <inheritdoc />
     public IOutputFormatter GetFormatter(FormatterType formatterType)
     {
@@ -13,7 +15,8 @@ public sealed class OutputFormatterFactory : IOutputFormatterFactory
             FormatterType.JSON => new JsonOutputFormatter(),
             FormatterType.TABLE => new TableOutputFormatter(),
             FormatterType.TEXT => new TextOutputFormatter(),
-            _ => throw new NotSupportedException(),
+            FormatterType.NONE => new NoneOutputFormatter(),
+            _ => throw new ArgumentOutOfRangeException(nameof(formatterType), formatterType, INVALID_FORMATTER_ERROR),
         };
     }
 
@@ -23,7 +26,7 @@ public sealed class OutputFormatterFactory : IOutputFormatterFactory
         var success = Enum.TryParse(format, true, out FormatterType type);
         if (!success)
         {
-            throw new NotSupportedException();
+            throw new ArgumentOutOfRangeException(nameof(format), format, INVALID_FORMATTER_ERROR);
         }
         return GetFormatter(type);
     }

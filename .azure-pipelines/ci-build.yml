@@ -108,6 +108,7 @@ stages:
           version: 2.x
 
       - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
+        condition: and(contains(variables['build.sourceBranch'], 'refs/heads/main'), succeeded())
         displayName: 'ESRP DLL Strong Name'
         inputs:
           ConnectedServiceName: 'microsoftgraph ESRP CodeSign DLL and NuGet (AKV)'
@@ -134,6 +135,7 @@ stages:
           SessionTimeout: 20
 
       - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
+        condition: and(contains(variables['build.sourceBranch'], 'refs/heads/main'), succeeded())
         displayName: 'ESRP DLL CodeSigning'
         inputs:
           ConnectedServiceName: 'microsoftgraph ESRP CodeSign DLL and NuGet (AKV)'
@@ -195,6 +197,7 @@ stages:
           pwsh: true
 
       - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
+        condition: and(contains(variables['build.sourceBranch'], 'refs/heads/main'), succeeded())
         displayName: 'ESRP CodeSigning Nuget Packages'
         inputs:
           ConnectedServiceName: 'microsoftgraph ESRP CodeSign DLL and NuGet (AKV)'

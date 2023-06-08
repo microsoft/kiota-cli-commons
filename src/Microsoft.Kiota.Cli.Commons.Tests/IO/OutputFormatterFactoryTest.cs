@@ -9,12 +9,12 @@ public class OutputFormatterFactoryTest
     public class GetFormatterFunction_Should
     {
         [Theory]
-        [InlineData(FormatterType.NONE)]
+        [InlineData((FormatterType)20)]
         public void ThrowException_On_Invalid_FormatterType(FormatterType formatterType)
         {
             var factory = new OutputFormatterFactory();
 
-            Assert.Throws<NotSupportedException>(() => factory.GetFormatter(formatterType));
+            Assert.Throws<ArgumentOutOfRangeException>(() => factory.GetFormatter(formatterType));
         }
 
         [Theory]

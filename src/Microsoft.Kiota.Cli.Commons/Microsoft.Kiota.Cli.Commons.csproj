@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
     <VersionPrefix>0.3.1</VersionPrefix>
     <VersionSuffix>preview.1</VersionSuffix>
-    
+
     <!-- Enable this line once we go live to prevent breaking changes -->
     <!-- <PackageValidationBaselineVersion>1.0.0</PackageValidationBaselineVersion> -->
   </PropertyGroup>
@@ -17,6 +17,7 @@
     <AssemblyTitle>Commons library for dotnet Kiota CLIs</AssemblyTitle>
     <Authors>Microsoft</Authors>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageIconUrl>http://go.microsoft.com/fwlink/?LinkID=288890</PackageIconUrl>
     <RepositoryUrl>https://github.com/microsoft/kiota-cli-commons</RepositoryUrl>
     <PackageProjectUrl>https://microsoft.github.io/kiota/</PackageProjectUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
@@ -30,6 +31,8 @@
     </PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <NoWarn>$(NoWarn);NU5048</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -43,9 +46,7 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="Microsoft.Kiota.Cli.Commons.Tests" />
-    <None Include="..\..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
+    <None Include="../../LICENSE" Pack="true" PackagePath="" />
+    <None Include="../../README.md" Pack="true" PackagePath="" />
   </ItemGroup>
 </Project>

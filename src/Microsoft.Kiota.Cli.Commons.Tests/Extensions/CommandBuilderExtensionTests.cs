@@ -89,16 +89,20 @@ public class CommandBuilderExtensionTests {
                 return Enumerable.Empty<KeyValuePair<string, ICollection<string>>>();
             });
         var command = new Command("test");
-        command.SetHandler(_ => {
+        var subcmd = new Command("sub");
+        command.Add(subcmd);
+        subcmd.SetHandler(_ => {
         });
         var parser = new CommandLineBuilder(command)
             .RegisterHeadersOption(() => storeMock.Object)
             .Build();
 
-        var result = parser.Parse("test --headers a=b");
+        var result = parser.Parse("test sub --headers a=b");
         await result.InvokeAsync();
 
         Assert.NotNull(givenHeaders);
         Assert.Equal("a=b", givenHeaders.FirstOrDefault());
+        Assert.Empty(command.Options);
+        Assert.Single(subcmd.Options);
     }
 }

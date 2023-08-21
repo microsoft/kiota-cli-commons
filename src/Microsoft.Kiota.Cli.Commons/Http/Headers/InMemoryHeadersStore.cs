@@ -38,11 +38,11 @@ public sealed class InMemoryHeadersStore : BaseHeadersStore
     }
 
     /// <inheritdoc />
-    protected override void DoAddHeader(string key, string value)
+    protected override void DoAddHeader(string name, string value)
     {
-        if (!_headers.TryAdd(key, new List<string> { value }))
+        if (!_headers.TryAdd(name, new List<string> { value }))
         {
-            _headers[key].Add(value);
+            _headers[name].Add(value);
         }
     }
 

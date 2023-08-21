@@ -21,7 +21,7 @@ public class NativeHttpHeadersHandler : DelegatingHandler
 
     /// <summary>
     /// Creates a new instance of the <see cref="NativeHttpHeadersHandler"/>
-    /// that will call the provided <see cref="headersStoreGetter"/> function
+    /// that will call the provided <paramref name="headersStoreGetter"/> function
     /// and attempt to add all the headers in the returned
     /// <see cref="IHeadersStore"/> instance. This handler calls the
     /// <see cref="IHeadersStore.Drain"/> function on the instance.
@@ -45,7 +45,7 @@ public class NativeHttpHeadersHandler : DelegatingHandler
 
     /// <inheritdoc />
     /// <remarks>
-    /// Adds headers to the <see cref="request"/> before sending it.
+    /// Adds headers to the <paramref name="request"/> before sending it.
     /// </remarks>
     /// <exception cref="FormatException">
     /// The header name format is invalid. -or- New line characters in header values must be followed by a white-space

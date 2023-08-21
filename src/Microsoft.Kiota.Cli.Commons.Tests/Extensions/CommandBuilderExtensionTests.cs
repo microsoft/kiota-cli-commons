@@ -1,10 +1,12 @@
+using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.Builder;
-using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Kiota.Abstractions;
 using Microsoft.Kiota.Cli.Commons.Extensions;
+using Microsoft.Kiota.Cli.Commons.Http.Headers;
 using Microsoft.Kiota.Cli.Commons.IO;
 using Moq;
 using Xunit;
@@ -73,5 +75,30 @@ public class CommandBuilderExtensionTests {
         Assert.IsType<JmesPathOutputFilter>(foundFilter);
         Assert.NotNull(foundPagingSvc);
         Assert.IsType<ODataPagingService>(foundPagingSvc);
+    }
+
+    [Fact]
+    public async Task RegisterRegisterHeadersOptionTest()
+    {
+        var storeMock = new Mock<IHeadersStore>();
+        ICollection<string>? givenHeaders = null;
+        storeMock.Setup(m => m.SetHeaders(It.IsAny<ICollection<string>>()))
+            .Returns((ICollection<string> headers) =>
+            {
+                givenHeaders = headers;
+                return Enumerable.Empty<KeyValuePair<string, ICollection<string>>>();
+            });
+        var command = new Command("test");
+        command.SetHandler(_ => {
+        });
+        var parser = new CommandLineBuilder(command)
+            .RegisterHeadersOption(() => storeMock.Object)
+            .Build();
+
+        var result = parser.Parse("test --headers a=b");
+        await result.InvokeAsync();
+
+        Assert.NotNull(givenHeaders);
+        Assert.Equal("a=b", givenHeaders.FirstOrDefault());
     }
 }

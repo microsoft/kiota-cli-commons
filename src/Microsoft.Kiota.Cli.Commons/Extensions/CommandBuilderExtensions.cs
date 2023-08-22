@@ -106,7 +106,7 @@ public static class CommandBuilderExtensions
     /// <see cref="IHeadersStore"/> and update the request. For an example that
     /// works with <see cref="System.Net.Http.HttpClient"/>,
     /// see the
-    /// <see cref="Microsoft.Kiota.Cli.Commons.Http.NativeHttpHeadersHandler"/>
+    /// <see cref="Http.NativeHttpHeadersHandler"/>
     /// class.
     /// </para>
     /// </remarks>
@@ -117,7 +117,7 @@ public static class CommandBuilderExtensions
             {
                 Arity = ArgumentArity.ZeroOrMore
             };
-        
+
         // Recursively adds the headers option to the commands with handlers starting with the root
         AddOptionToCommandIf(builder.Command, headersOption, cmd => cmd.Handler is not null);
         

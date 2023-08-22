@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,7 +12,7 @@ namespace Microsoft.Kiota.Cli.Commons.Http.Headers;
 /// </remarks>
 public sealed class InMemoryHeadersStore : BaseHeadersStore
 {
-    private readonly Dictionary<string, ICollection<string>> _headers = new();
+    private readonly Dictionary<string, ICollection<string>> _headers = new(StringComparer.OrdinalIgnoreCase);
 
     /// <summary>
     /// Returns a single instance of the <see cref="InMemoryHeadersStore"/>
@@ -23,16 +24,15 @@ public sealed class InMemoryHeadersStore : BaseHeadersStore
     /// instance and use that instead. In that case, make sure you have cached
     /// the instance when you need to access the stored headers.
     /// </remarks>
-    public static InMemoryHeadersStore Instance { get; } = new InMemoryHeadersStore();
+    public static InMemoryHeadersStore Instance { get; } = new();
 
     /// <inheritdoc />
-    public override IEnumerable<KeyValuePair<string, ICollection<string>>> Headers() => _headers.AsEnumerable();
+    public override IEnumerable<KeyValuePair<string, ICollection<string>>> GetHeaders() => _headers.AsEnumerable();
 
     /// <inheritdoc />
     public override IEnumerable<KeyValuePair<string, ICollection<string>>> Drain()
     {
-        var existing = new List<KeyValuePair<string, ICollection<string>>>(_headers.Count);
-        existing.AddRange(_headers);
+        var existing = _headers.ToList();
         _headers.Clear();
         return existing;
     }

@@ -10,7 +10,7 @@ namespace Microsoft.Kiota.Cli.Commons.Http.Headers;
 public abstract class BaseHeadersStore : IHeadersStore
 {
     /// <inheritdoc />
-    public abstract IEnumerable<KeyValuePair<string, ICollection<string>>> Headers();
+    public abstract IEnumerable<KeyValuePair<string, ICollection<string>>> GetHeaders();
 
     /// <inheritdoc />
     /// <remarks> 

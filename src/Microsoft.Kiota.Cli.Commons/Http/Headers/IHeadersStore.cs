@@ -11,7 +11,7 @@ public interface IHeadersStore
     /// Get the currently existing headers.
     /// </summary>
     /// <returns>The currently existing headers.</returns>
-    public IEnumerable<KeyValuePair<string, ICollection<string>>> Headers();
+    public IEnumerable<KeyValuePair<string, ICollection<string>>> GetHeaders();
     
     /// <summary>
     /// Receives a collection of strings with header information, parses the

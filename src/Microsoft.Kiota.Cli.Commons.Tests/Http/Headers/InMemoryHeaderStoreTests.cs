@@ -16,8 +16,8 @@ public class InMemoryHeaderStoreTests
             var store = new InMemoryHeadersStore();
             store.SetHeaders(header);
 
-            Assert.Single(store.Headers());
-            Assert.Single(store.Headers().First().Value);
+            Assert.Single(store.GetHeaders());
+            Assert.Single(store.GetHeaders().First().Value);
         }
 
         [Fact]
@@ -27,9 +27,9 @@ public class InMemoryHeaderStoreTests
             var store = new InMemoryHeadersStore();
             store.SetHeaders(header);
             
-            Assert.NotEmpty(store.Headers());
-            Assert.Equal(2, store.Headers().Count());
-            Assert.Single(store.Headers().First().Value);
+            Assert.NotEmpty(store.GetHeaders());
+            Assert.Equal(2, store.GetHeaders().Count());
+            Assert.Single(store.GetHeaders().First().Value);
         }
 
         [Fact]
@@ -39,9 +39,9 @@ public class InMemoryHeaderStoreTests
             var store = new InMemoryHeadersStore();
             store.SetHeaders(header);
             
-            Assert.NotEmpty(store.Headers());
-            Assert.Single(store.Headers());
-            Assert.Equal(2, store.Headers().First().Value.Count);
+            Assert.NotEmpty(store.GetHeaders());
+            Assert.Single(store.GetHeaders());
+            Assert.Equal(2, store.GetHeaders().First().Value.Count);
         }
         
         [Fact]
@@ -54,12 +54,12 @@ public class InMemoryHeaderStoreTests
             var result = store.SetHeaders(new[] { "sample3=header3" });
             
             Assert.Equal(2, result.Count());
-            Assert.Single(store.Headers());
-            Assert.Single(store.Headers().First().Value);
+            Assert.Single(store.GetHeaders());
+            Assert.Single(store.GetHeaders().First().Value);
             
             result = store.SetHeaders(Array.Empty<string>());
             Assert.Single(result);
-            Assert.Empty(store.Headers());
+            Assert.Empty(store.GetHeaders());
         }
     }
     
@@ -72,11 +72,11 @@ public class InMemoryHeaderStoreTests
             var store = new InMemoryHeadersStore();
             store.SetHeaders(header);
 
-            Assert.Equal(2, store.Headers().Count());
+            Assert.Equal(2, store.GetHeaders().Count());
             Assert.True(store.AddHeaders(new[] { "sample3=header3" }));
-            Assert.Equal(3, store.Headers().Count());
+            Assert.Equal(3, store.GetHeaders().Count());
             Assert.False(store.AddHeaders(Array.Empty<string>()));
-            Assert.Equal(3, store.Headers().Count());
+            Assert.Equal(3, store.GetHeaders().Count());
         }
     }
     
@@ -89,12 +89,12 @@ public class InMemoryHeaderStoreTests
             var store = new InMemoryHeadersStore();
             store.AddHeaders(header);
 
-            Assert.Equal(2, store.Headers().Count());
+            Assert.Equal(2, store.GetHeaders().Count());
 
             var result = store.Drain();
 
             Assert.Equal(2, result.Count());
-            Assert.Empty(store.Headers());
+            Assert.Empty(store.GetHeaders());
         }
     }
 }

@@ -15,6 +15,7 @@ namespace Microsoft.Kiota.Cli.Commons.Http;
 public class NativeHttpHeadersHandler : DelegatingHandler
 {
     private const string AddHeaderWarningTpl = "Could not add the {Kind}header {HeaderName}";
+    private const string ContentKind = "Content ";
 
     private readonly Func<IHeadersStore> _headersStoreGetter;
     private readonly ILogger<NativeHttpHeadersHandler>? _logger;
@@ -58,22 +59,17 @@ public class NativeHttpHeadersHandler : DelegatingHandler
         {
             try
             {
-                // content headers defined in: https://www.rfc-editor.org/rfc/rfc2616
-                if (headerItem.Key is "Content-Encoding" or "Content-Language" or "Content-Length" or "Content-Location"
-                    or "Content-MD5" or "Content-Range" or "Content-Type")
+                switch (IsContentHeader(headerItem.Key))
                 {
-                    if (request.Content is { } content)
-                    {
+                    case true when request.Content is { } content:
                         content.Headers.Add(headerItem.Key, headerItem.Value);
-                    }
-                    else
-                    {
-                        _logger?.LogWarning(AddHeaderWarningTpl, "Content ", headerItem.Key);
-                    }
-                }
-                else
-                {
-                    request.Headers.Add(headerItem.Key, headerItem.Value);
+                        break;
+                    case false:
+                        request.Headers.Add(headerItem.Key, headerItem.Value);
+                        break;
+                    default:
+                        _logger?.LogWarning(AddHeaderWarningTpl, ContentKind, headerItem.Key);
+                        break;
                 }
             }
             catch (Exception ex) when (ex is InvalidOperationException or FormatException)
@@ -83,5 +79,17 @@ public class NativeHttpHeadersHandler : DelegatingHandler
         }
 
         return base.SendAsync(request, cancellationToken);
+    }
+    
+    private static bool IsContentHeader(string value)
+    {
+        // content headers defined in: https://www.rfc-editor.org/rfc/rfc2616
+        return string.Equals(value, "Content-Encoding", StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(value, "Content-Language", StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(value, "Content-Length", StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(value, "Content-Location", StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(value, "Content-MD5", StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(value, "Content-Range", StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(value, "Content-Type", StringComparison.OrdinalIgnoreCase);
     }
 }

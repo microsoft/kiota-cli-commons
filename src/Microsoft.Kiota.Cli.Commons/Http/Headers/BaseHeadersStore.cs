@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Microsoft.Kiota.Cli.Commons.Http.Headers;
 
@@ -14,10 +15,10 @@ public abstract class BaseHeadersStore : IHeadersStore
 
     /// <inheritdoc />
     /// <remarks> 
-    /// Passing an empty collection of headers to this function has the same
-    /// effect as calling <see cref="Drain"/>
+    /// Passing a null or empty collection of headers to this function has the
+    /// same effect as calling <see cref="Drain"/>
     /// </remarks>
-    public virtual IEnumerable<KeyValuePair<string, ICollection<string>>> SetHeaders(ICollection<string> headers)
+    public virtual IEnumerable<KeyValuePair<string, ICollection<string>>> SetHeaders(ICollection<string>? headers)
     {
         var existing = Drain();
         AddHeaders(headers);
@@ -26,13 +27,15 @@ public abstract class BaseHeadersStore : IHeadersStore
 
     /// <inheritdoc />
     /// <remarks>
+    /// If <paramref name="headers"/> collection is null, this function will
+    /// return false
     /// The parsing logic for this type uses the <see cref="ParseHeaders"/>
     /// function to parse the headers. Override ParseHeaders in sub-classes
     /// to change the parsing behavior.
     /// </remarks>
-    public virtual bool AddHeaders(ICollection<string> headers)
+    public virtual bool AddHeaders(ICollection<string>? headers)
     {
-        if (headers.Count < 1)
+        if (headers is null || headers.Count < 1)
         {
             return false;
         }
@@ -64,6 +67,9 @@ public abstract class BaseHeadersStore : IHeadersStore
     /// <remarks>Override this function to customize the parsing logic.</remarks>
     protected virtual IEnumerable<KeyValuePair<string, string>> ParseHeaders(IEnumerable<string> headers)
     {
+        // This function is called by AddHeaders which checks for null. If
+        // headers is null, then something went wrong
+        Debug.Assert(headers is not null);
         foreach (var headerLine in headers)
         {
             var split = headerLine.Split('=',

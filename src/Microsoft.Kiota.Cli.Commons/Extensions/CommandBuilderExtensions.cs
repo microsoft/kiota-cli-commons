@@ -124,10 +124,7 @@ public static class CommandBuilderExtensions
         builder.AddMiddleware(async (ic, next) =>
         {
             // Add headers to the headers store.
-            if (ic.ParseResult.GetValueForOption(headersOption) is { } options)
-            {
-                headersStoreGetter().SetHeaders(options);
-            }
+            headersStoreGetter().SetHeaders(ic.ParseResult.GetValueForOption(headersOption));
             await next(ic);
         });
         return builder;

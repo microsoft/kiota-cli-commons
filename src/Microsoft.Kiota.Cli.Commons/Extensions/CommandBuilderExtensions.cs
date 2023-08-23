@@ -17,7 +17,8 @@ public static class CommandBuilderExtensions
     /// <summary>
     /// Registers an instance of IRequestAdapter.
     /// </summary>
-    public static CommandLineBuilder UseRequestAdapter(this CommandLineBuilder builder, Func<InvocationContext, IRequestAdapter> builderFactory)
+    public static CommandLineBuilder UseRequestAdapter(this CommandLineBuilder builder,
+        Func<InvocationContext, IRequestAdapter> builderFactory)
     {
         builder.AddMiddleware(async (context, next) =>
         {
@@ -97,6 +98,10 @@ public static class CommandBuilderExtensions
     /// 
     /// <remarks>
     /// <para>
+    /// If the <paramref name="name"/> has no alphanumeric characters, the
+    /// default name will be used.
+    /// </para>
+    /// <para>
     /// This function must be called after the root command has been set in
     /// the <see cref="CommandLineBuilder"/>.
     /// </para>
@@ -110,17 +115,26 @@ public static class CommandBuilderExtensions
     /// class.
     /// </para>
     /// </remarks>
-    public static CommandLineBuilder RegisterHeadersOption(this CommandLineBuilder builder, Func<IHeadersStore> headersStoreGetter, string name="--headers", string? customDescription = null)
+    public static CommandLineBuilder RegisterHeadersOption(this CommandLineBuilder builder,
+        Func<IHeadersStore> headersStoreGetter, string name = "--headers", string? customDescription = null)
     {
-        // TODO: Check for empty name?
-        var headersOption = new Option<string[]>(name, customDescription ?? $"Allows adding custom headers to the request. The option can be used multiple times to add multiple headers. e.g. --{name} key1=value1 --{name} key2=value2")
-            {
-                Arity = ArgumentArity.ZeroOrMore
-            };
+        // System.CommandLine library doesn't validate empty option names. Handle that scenario.
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            // Use the default name instead of throwing an exception.
+            name = "--headers";
+        }
+
+        var headersOption = new Option<string[]>(name,
+            customDescription ??
+            $"Allows adding custom headers to the request. The option can be used multiple times to add multiple headers. e.g. --{name} key1=value1 --{name} key2=value2")
+        {
+            Arity = ArgumentArity.ZeroOrMore
+        };
 
         // Recursively adds the headers option to the commands with handlers starting with the root
         AddOptionToCommandIf(builder.Command, headersOption, cmd => cmd.Handler is not null);
-        
+
         builder.AddMiddleware(async (ic, next) =>
         {
             // Add headers to the headers store.
@@ -130,8 +144,10 @@ public static class CommandBuilderExtensions
         return builder;
     }
 
-    private static void AddOptionToCommandIf(Command command, in Option option, Func<Command, bool> predicate) {
-        if (predicate(command)) {
+    private static void AddOptionToCommandIf(Command command, in Option option, Func<Command, bool> predicate)
+    {
+        if (predicate(command))
+        {
             command.AddOption(option);
         }
 

@@ -23,7 +23,6 @@ namespace Microsoft.Kiota.Cli.Commons.Http.Headers;
 public sealed class InMemoryHeadersStore : BaseHeadersStore
 {
     private readonly IDictionary<string, ICollection<string>> _headers;
-    private readonly bool _isConcurrent;
 
     /// <summary>
     /// Returns a thread unsafe single instance of the
@@ -48,7 +47,7 @@ public sealed class InMemoryHeadersStore : BaseHeadersStore
     /// A boolean indicating whether the store can be used in multi-threaded
     /// contexts safely.
     /// </summary>
-    public bool IsConcurrent => _isConcurrent;
+    public bool IsConcurrent { get; }
 
     /// <inheritdoc />
     public override IEnumerable<KeyValuePair<string, ICollection<string>>> GetHeaders() => _headers.AsEnumerable();
@@ -86,7 +85,7 @@ public sealed class InMemoryHeadersStore : BaseHeadersStore
     {
         if (concurrent)
         {
-            _isConcurrent = true;
+            IsConcurrent = true;
             _headers = new ConcurrentDictionary<string, ICollection<string>>(StringComparer.OrdinalIgnoreCase);
         }
         else

@@ -45,6 +45,16 @@ public class InMemoryHeaderStoreTests
         }
         
         [Fact]
+        public void Skips_Unparsed_Headers()
+        {
+            var header = new [] {"sample=", "test", string.Empty, };
+            var store = new InMemoryHeadersStore();
+            store.SetHeaders(header);
+            
+            Assert.Empty(store.GetHeaders());
+        }
+        
+        [Fact]
         public void Clears_Existing_Headers()
         {
             var header = new [] {"sample=header", "sample2=header2", };

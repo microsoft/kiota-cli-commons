@@ -62,9 +62,19 @@ public abstract class BaseHeadersStore : IHeadersStore
     /// in <code>["a=1", "b=2"]</code> the result will be
     /// <code>[{ "a": "1" }, { "b": "2" }]</code>
     /// </summary>
-    /// <param name="headers">A collection of strings with header information.</param>
-    /// <returns>A collection of key-value pairs with parsed header information.</returns>
-    /// <remarks>Override this function to customize the parsing logic.</remarks>
+    /// 
+    /// <param name="headers">
+    /// A collection of strings with header information. This collection MUST
+    /// be non-null.
+    /// </param>
+    /// 
+    /// <returns>
+    /// A collection of key-value pairs with parsed header information.
+    /// </returns>
+    /// 
+    /// <remarks>
+    /// Override this function to customize the parsing logic.
+    /// </remarks>
     protected virtual IEnumerable<KeyValuePair<string, string>> ParseHeaders(IEnumerable<string> headers)
     {
         // This function is called by AddHeaders which checks for null. If

@@ -100,16 +100,12 @@ public class NativeHttpHeadersHandler : DelegatingHandler
                 switch (IsContentHeader(headerItem.Key))
                 {
                     case true when request.Content is { } content:
-                        if ("Content-Type".Equals(headerItem.Key) || "Content-Length".Equals(headerItem.Key))
+                        // These headers don't support multiple values.
+                        // First remove the existing header, but log a warning
+                        // so the user is aware a replacement will happen
+                        if (("Content-Type".Equals(headerItem.Key) || "Content-Length".Equals(headerItem.Key)) && content.Headers.Remove(headerItem.Key))
                         {
-                            // These headers don't support multiple values.
-                            // First remove the existing header, but log a
-                            // warning so the user is aware a replacement
-                            // will happen
-                            if (content.Headers.Remove(headerItem.Key))
-                            {
-                                _logger?.LogWarning("The header {HeaderName} will replace an existing header value with {NewHeaderValue}.", headerItem.Key, headerItem.Value);
-                            }
+                            _logger?.LogWarning("The header {HeaderName} will replace an existing header value with {NewHeaderValue}.", headerItem.Key, headerItem.Value);
                         }
 
                         content.Headers.Add(headerItem.Key, headerItem.Value);

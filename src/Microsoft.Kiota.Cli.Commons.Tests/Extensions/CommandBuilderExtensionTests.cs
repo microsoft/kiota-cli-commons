@@ -13,7 +13,8 @@ using Xunit;
 
 namespace Microsoft.Kiota.Cli.Commons.Tests.Extensions;
 
-public class CommandBuilderExtensionTests {
+public class CommandBuilderExtensionTests
+{
     [Fact]
     public async Task UseRequestAdapterFuncRegistersTheGivenRequestAdapterAsync()
     {
@@ -57,7 +58,8 @@ public class CommandBuilderExtensionTests {
         object? foundFilter = null;
         object? foundPagingSvc = null;
         var command = new Command("test");
-        command.SetHandler(ctx => {
+        command.SetHandler(ctx =>
+        {
             foundFmtFactory = ctx.BindingContext.GetService(typeof(IOutputFormatterFactory));
             foundFilter = ctx.BindingContext.GetService(typeof(IOutputFilter));
             foundPagingSvc = ctx.BindingContext.GetService(typeof(IPagingService));
@@ -77,32 +79,89 @@ public class CommandBuilderExtensionTests {
         Assert.IsType<ODataPagingService>(foundPagingSvc);
     }
 
-    [Fact]
-    public async Task RegisterRegisterHeadersOptionTest()
+    public class RegisterHeadersOptionTests
     {
-        var storeMock = new Mock<IHeadersStore>();
-        ICollection<string>? givenHeaders = null;
-        storeMock.Setup(m => m.SetHeaders(It.IsAny<ICollection<string>>()))
-            .Returns((ICollection<string> headers) =>
-            {
-                givenHeaders = headers;
-                return Enumerable.Empty<KeyValuePair<string, ICollection<string>>>();
-            });
-        var command = new Command("test");
-        var subcmd = new Command("sub");
-        command.Add(subcmd);
-        subcmd.SetHandler(_ => {
-        });
-        var parser = new CommandLineBuilder(command)
-            .RegisterHeadersOption(() => storeMock.Object)
-            .Build();
+        [Fact]
+        public async Task RegistersDefaultNamedHeadersOption()
+        {
+            var storeMock = new Mock<IHeadersStore>();
+            ICollection<string>? givenHeaders = null;
+            storeMock.Setup(m => m.SetHeaders(It.IsAny<ICollection<string>>()))
+                .Returns((ICollection<string> headers) =>
+                {
+                    givenHeaders = headers;
+                    return Enumerable.Empty<KeyValuePair<string, ICollection<string>>>();
+                });
+            var command = new Command("test");
+            var subcmd = new Command("sub");
+            command.Add(subcmd);
+            subcmd.SetHandler(_ => { });
+            var parser = new CommandLineBuilder(command)
+                .RegisterHeadersOption(() => storeMock.Object)
+                .Build();
 
-        var result = parser.Parse("test sub --headers a=b");
-        await result.InvokeAsync();
+            var result = parser.Parse("test sub --headers a=b");
+            await result.InvokeAsync();
 
-        Assert.NotNull(givenHeaders);
-        Assert.Equal("a=b", givenHeaders.FirstOrDefault());
-        Assert.Empty(command.Options);
-        Assert.Single(subcmd.Options);
+            Assert.NotNull(givenHeaders);
+            Assert.Equal("a=b", givenHeaders.FirstOrDefault());
+            Assert.Empty(command.Options);
+            Assert.Single(subcmd.Options);
+        }
+        
+        [Fact]
+        public async Task RegistersDefaultNamedHeadersOptionWhenNameIsEmpty()
+        {
+            var storeMock = new Mock<IHeadersStore>();
+            ICollection<string>? givenHeaders = null;
+            storeMock.Setup(m => m.SetHeaders(It.IsAny<ICollection<string>>()))
+                .Returns((ICollection<string> headers) =>
+                {
+                    givenHeaders = headers;
+                    return Enumerable.Empty<KeyValuePair<string, ICollection<string>>>();
+                });
+            var command = new Command("test");
+            var subcmd = new Command("sub");
+            command.Add(subcmd);
+            subcmd.SetHandler(_ => { });
+            var parser = new CommandLineBuilder(command)
+                .RegisterHeadersOption(() => storeMock.Object, name: string.Empty)
+                .Build();
+
+            var result = parser.Parse("test sub --headers a=b");
+            await result.InvokeAsync();
+
+            Assert.NotNull(givenHeaders);
+            Assert.Equal("a=b", givenHeaders.FirstOrDefault());
+            Assert.Empty(command.Options);
+            Assert.Single(subcmd.Options);
+        }
+        [Fact]
+        public async Task RegistersNamedHeadersOptionWhenNameIsProvided()
+        {
+            var storeMock = new Mock<IHeadersStore>();
+            ICollection<string>? givenHeaders = null;
+            storeMock.Setup(m => m.SetHeaders(It.IsAny<ICollection<string>>()))
+                .Returns((ICollection<string> headers) =>
+                {
+                    givenHeaders = headers;
+                    return Enumerable.Empty<KeyValuePair<string, ICollection<string>>>();
+                });
+            var command = new Command("test");
+            var subcmd = new Command("sub");
+            command.Add(subcmd);
+            subcmd.SetHandler(_ => { });
+            var parser = new CommandLineBuilder(command)
+                .RegisterHeadersOption(() => storeMock.Object, name: "--custom-headers")
+                .Build();
+
+            var result = parser.Parse("test sub --custom-headers a=b");
+            await result.InvokeAsync();
+
+            Assert.NotNull(givenHeaders);
+            Assert.Equal("a=b", givenHeaders.FirstOrDefault());
+            Assert.Empty(command.Options);
+            Assert.Single(subcmd.Options);
+        }
     }
 }

@@ -16,6 +16,13 @@ public class NativeHttpHeadersHandler : DelegatingHandler
 {
     private const string AddHeaderWarningTpl = "Could not add the {Kind}header {HeaderName} to the request headers";
     private const string ContentKind = "content ";
+    private const string ContentEncodingHeader = "Content-Encoding";
+    private const string ContentLanguageHeader = "Content-Language";
+    private const string ContentLengthHeader = "Content-Length";
+    private const string ContentLocationHeader = "Content-Location";
+    private const string ContentMd5Header = "Content-MD5";
+    private const string ContentRangeHeader = "Content-Range";
+    private const string ContentTypeHeader = "Content-Type";
 
     private readonly Func<IHeadersStore> _headersStoreGetter;
     private readonly ILogger<NativeHttpHeadersHandler>? _logger;
@@ -103,9 +110,12 @@ public class NativeHttpHeadersHandler : DelegatingHandler
                         // These headers don't support multiple values.
                         // First remove the existing header, but log a warning
                         // so the user is aware a replacement will happen
-                        if (("Content-Type".Equals(headerItem.Key) || "Content-Length".Equals(headerItem.Key)) && content.Headers.Remove(headerItem.Key))
+                        if ((ContentTypeHeader.Equals(headerItem.Key) || ContentLengthHeader.Equals(headerItem.Key)) &&
+                            content.Headers.Remove(headerItem.Key))
                         {
-                            _logger?.LogWarning("The header {HeaderName} will replace an existing header value with {NewHeaderValue}.", headerItem.Key, headerItem.Value);
+                            _logger?.LogWarning(
+                                "The header {HeaderName} will replace an existing header value with {NewHeaderValue}.",
+                                headerItem.Key, headerItem.Value);
                         }
 
                         content.Headers.Add(headerItem.Key, headerItem.Value);
@@ -128,12 +138,12 @@ public class NativeHttpHeadersHandler : DelegatingHandler
     private static bool IsContentHeader(string value)
     {
         // content headers defined in: https://www.rfc-editor.org/rfc/rfc2616
-        return string.Equals(value, "Content-Encoding", StringComparison.OrdinalIgnoreCase) ||
-               string.Equals(value, "Content-Language", StringComparison.OrdinalIgnoreCase) ||
-               string.Equals(value, "Content-Length", StringComparison.OrdinalIgnoreCase) ||
-               string.Equals(value, "Content-Location", StringComparison.OrdinalIgnoreCase) ||
-               string.Equals(value, "Content-MD5", StringComparison.OrdinalIgnoreCase) ||
-               string.Equals(value, "Content-Range", StringComparison.OrdinalIgnoreCase) ||
-               string.Equals(value, "Content-Type", StringComparison.OrdinalIgnoreCase);
+        return ContentEncodingHeader.Equals(value, StringComparison.OrdinalIgnoreCase) ||
+               ContentLanguageHeader.Equals(value, StringComparison.OrdinalIgnoreCase) ||
+               ContentLengthHeader.Equals(value, StringComparison.OrdinalIgnoreCase) ||
+               ContentLocationHeader.Equals(value, StringComparison.OrdinalIgnoreCase) ||
+               ContentMd5Header.Equals(value, StringComparison.OrdinalIgnoreCase) ||
+               ContentRangeHeader.Equals(value, StringComparison.OrdinalIgnoreCase) ||
+               ContentTypeHeader.Equals(value, StringComparison.OrdinalIgnoreCase);
     }
 }

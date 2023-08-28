@@ -79,7 +79,7 @@ public abstract class BaseHeadersStore : IHeadersStore
     {
         // This function is called by AddHeaders which checks for null. If
         // headers is null, then something went wrong
-        Debug.Assert(headers is not null);
+        ArgumentNullException.ThrowIfNull(headers);
         foreach (var headerLine in headers)
         {
             var split = headerLine.Split('=',

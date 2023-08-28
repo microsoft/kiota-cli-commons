@@ -110,7 +110,8 @@ public class NativeHttpHeadersHandler : DelegatingHandler
                         // These headers don't support multiple values.
                         // First remove the existing header, but log a warning
                         // so the user is aware a replacement will happen
-                        if ((ContentTypeHeader.Equals(headerItem.Key) || ContentLengthHeader.Equals(headerItem.Key)) &&
+                        if ((ContentTypeHeader.Equals(headerItem.Key, StringComparison.OrdinalIgnoreCase) ||
+                             ContentLengthHeader.Equals(headerItem.Key, StringComparison.OrdinalIgnoreCase)) &&
                             content.Headers.Remove(headerItem.Key))
                         {
                             _logger?.LogWarning(

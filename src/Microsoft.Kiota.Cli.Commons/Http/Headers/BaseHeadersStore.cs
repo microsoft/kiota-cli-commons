@@ -80,6 +80,11 @@ public abstract class BaseHeadersStore : IHeadersStore
         // This function is called by AddHeaders which checks for null. If
         // headers is null, then something went wrong
         ArgumentNullException.ThrowIfNull(headers);
+        return ParseHeadersIterator(headers);
+    }
+
+    private IEnumerable<KeyValuePair<string, string>> ParseHeadersIterator(IEnumerable<string> headers)
+    {
         foreach (var headerLine in headers)
         {
             var split = headerLine.Split('=',

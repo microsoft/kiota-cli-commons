@@ -12,8 +12,7 @@ namespace Microsoft.Kiota.Cli.Commons.Http.Headers;
 /// <remarks>
 /// <para>
 /// Use <see cref="Instance"/> static property to get a default thread unsafe
-/// header store and <see cref="ConcurrentInstance"/> static property to get a
-/// thread-safe variant.
+/// header store singleton.
 /// </para>
 /// <para>
 /// Use the <see cref="IsConcurrent"/> instance property to determine if an
@@ -36,12 +35,6 @@ public sealed class InMemoryHeadersStore : BaseHeadersStore
     /// the instance when you need to access the stored headers.
     /// </remarks>
     public static InMemoryHeadersStore Instance { get; } = new();
-
-    /// <summary>
-    /// Returns a thread safe single instance of the
-    /// <see cref="InMemoryHeadersStore"/> singleton.
-    /// </summary>
-    public static InMemoryHeadersStore ConcurrentInstance { get; } = new(true);
 
     /// <summary>
     /// A boolean indicating whether the store can be used in multi-threaded

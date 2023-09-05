@@ -95,7 +95,7 @@ public static class CommandBuilderExtensions
     /// <returns>
     /// The same instance of <see cref="CommandLineBuilder"/>.
     /// </returns>
-    /// 
+    ///
     /// <remarks>
     /// <para>
     /// If the <paramref name="name"/> has no alphanumeric characters, the
@@ -127,7 +127,7 @@ public static class CommandBuilderExtensions
 
         var headersOption = new Option<string[]>(name,
             customDescription ??
-            $"Allows adding custom headers to the request. The option can be used multiple times to add multiple headers. e.g. --{name} key1=value1 --{name} key2=value2")
+            $"Allows adding custom headers to the request. The option can be used multiple times to add multiple headers. e.g. {name} key1=value1 {name} key2=value2")
         {
             Arity = ArgumentArity.ZeroOrMore
         };

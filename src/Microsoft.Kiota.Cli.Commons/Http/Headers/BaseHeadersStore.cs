@@ -87,7 +87,7 @@ public abstract class BaseHeadersStore : IHeadersStore
     {
         foreach (var headerLine in headers)
         {
-            var idx = headerLine.IndexOf('=');
+            var idx = headerLine.IndexOf('=', StringComparison.Ordinal);
             if (idx < 0 || idx + 1 >= headerLine.Length)
             {
                 continue;

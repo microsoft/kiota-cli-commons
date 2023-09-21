@@ -87,14 +87,13 @@ public abstract class BaseHeadersStore : IHeadersStore
     {
         foreach (var headerLine in headers)
         {
-            var split = headerLine.Split('=',
-                StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-            if (split.Length < 2)
+            var idx = headerLine.IndexOf('=', StringComparison.Ordinal);
+            if (idx < 0 || idx + 1 >= headerLine.Length)
             {
                 continue;
             }
 
-            yield return new KeyValuePair<string, string>(split[0], split[1]);
+            yield return new KeyValuePair<string, string>(headerLine[..idx], headerLine[(idx + 1)..]);
         }
     }
     

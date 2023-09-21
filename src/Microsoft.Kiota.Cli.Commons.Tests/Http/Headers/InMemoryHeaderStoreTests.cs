@@ -45,6 +45,19 @@ public class InMemoryHeaderStoreTests
         }
         
         [Fact]
+        public void Stores_Headers_With_Equals_Sign_In_Value()
+        {
+            var header = new [] {"sample=header=test", };
+            var store = new InMemoryHeadersStore();
+            store.SetHeaders(header);
+
+            var headers = store.GetHeaders().ToArray();
+            Assert.Single(headers);
+            Assert.Equal("sample", headers.First().Key);
+            Assert.Equal("header=test", headers.First().Value.Single());
+        }
+        
+        [Fact]
         public void Skips_Unparsed_Headers()
         {
             var header = new [] {"sample=", "test", string.Empty, };

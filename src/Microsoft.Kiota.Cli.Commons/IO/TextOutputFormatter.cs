@@ -13,22 +13,15 @@ namespace Microsoft.Kiota.Cli.Commons.IO;
 /// </summary>
 public class TextOutputFormatter : IOutputFormatter
 {
-    private readonly IAnsiConsole _ansiConsole;
+    private readonly IConsole console;
+
 
     /// <summary>
     /// Creates a new JSON output formatter with a default console
     /// </summary>
-    public TextOutputFormatter() : this(AnsiConsole.Console)
+    public TextOutputFormatter(IConsole console)
     {
-    }
-
-    /// <summary>
-    /// Creates a new JSON output formatter with the provided console
-    /// </summary>
-    /// <param name="console">The console to use</param>
-    public TextOutputFormatter(IAnsiConsole console)
-    {
-        this._ansiConsole = console;
+        this.console = console;
     }
 
     /// <inheritdoc />
@@ -48,8 +41,8 @@ public class TextOutputFormatter : IOutputFormatter
             if (charsReceived == 0) {
                 break;
             }
-            _ansiConsole.Write(new string(buffer, 0, charsReceived));
+            console.Write(new string(buffer, 0, charsReceived));
         } while(charsReceived == BUFFER_LENGTH);
-        _ansiConsole.WriteLine();
+        console.WriteLine();
     }
 }

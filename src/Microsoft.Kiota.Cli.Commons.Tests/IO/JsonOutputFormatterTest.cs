@@ -38,7 +38,6 @@ public sealed class JsonOutputFormatterTest
 
             await formatter.WriteOutputAsync(stream, new JsonOutputFormatterOptions(true));
             var expected = $"{{{n}  \"a\": 1,{n}  \"b\": \"test\"{n}}}";
-            Console.Out.Flush();
 
             Assert.Equal($"{expected}{n}", tc.Output);
         }
@@ -53,7 +52,6 @@ public sealed class JsonOutputFormatterTest
 
             await formatter.WriteOutputAsync(stream, new JsonOutputFormatterOptions(false));
             var expected = $"{content}{NewLine}";
-            Console.Out.Flush();
 
             Assert.Equal(expected, tc.Output);
         }
@@ -67,7 +65,6 @@ public sealed class JsonOutputFormatterTest
 
             await formatter.WriteOutputAsync(stream, new JsonOutputFormatterOptions(false));
             var expected = "";
-            Console.Out.Flush();
 
             Assert.Equal(expected, tc.Output);
         }

@@ -1,9 +1,8 @@
-﻿using System.CommandLine;
+﻿using System;
 using System.IO;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Spectre.Console;
 
 namespace Microsoft.Kiota.Cli.Commons.IO;
 
@@ -12,22 +11,14 @@ namespace Microsoft.Kiota.Cli.Commons.IO;
 /// </summary>
 public class JsonOutputFormatter : IOutputFormatter
 {
-    private readonly IAnsiConsole _ansiConsole;
+    private readonly IConsole console;
 
     /// <summary>
     /// Creates a new JSON output formatter with a default console
     /// </summary>
-    public JsonOutputFormatter() : this(AnsiConsole.Console)
+    public JsonOutputFormatter(IConsole console)
     {
-    }
-
-    /// <summary>
-    /// Creates a new JSON output formatter with the provided console
-    /// </summary>
-    /// <param name="console">The console to use</param>
-    public JsonOutputFormatter(IAnsiConsole console)
-    {
-        this._ansiConsole = console;
+        this.console = console;
     }
 
     /// <inheritdoc />
@@ -51,7 +42,7 @@ public class JsonOutputFormatter : IOutputFormatter
             resultStr = await reader.ReadToEndAsync(cancellationToken);
         }
 
-        _ansiConsole.WriteLine(resultStr);
+        console.WriteLine(resultStr);
     }
 
     /// <summary>

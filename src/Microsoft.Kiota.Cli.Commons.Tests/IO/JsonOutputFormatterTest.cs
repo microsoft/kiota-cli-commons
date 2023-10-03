@@ -22,7 +22,7 @@ public sealed class JsonOutputFormatterTest
             var content = "Test content";
             var stream = new MemoryStream(Encoding.ASCII.GetBytes(content));
 
-            await formatter.WriteOutputAsync(stream, new JsonOutputFormatterOptions(true));
+            await formatter.WriteOutputAsync(stream);
 
             Assert.Equal($"{content}{NewLine}", tc.Output);
         }
@@ -31,12 +31,12 @@ public sealed class JsonOutputFormatterTest
         public async Task Write_Indented_Output_Given_A_Minified_Json_Stream()
         {
             var tc = new TestConsole();
-            var formatter = new JsonOutputFormatter(tc);
+            var formatter = new JsonOutputFormatter(tc, true);
             var content = "{\"a\": 1, \"b\": \"test\"}";
             var stream = new MemoryStream(Encoding.ASCII.GetBytes(content));
             var n = NewLine;
 
-            await formatter.WriteOutputAsync(stream, new JsonOutputFormatterOptions(true));
+            await formatter.WriteOutputAsync(stream);
             var expected = $"{{{n}  \"a\": 1,{n}  \"b\": \"test\"{n}}}";
 
             Assert.Equal($"{expected}{n}", tc.Output);
@@ -50,7 +50,7 @@ public sealed class JsonOutputFormatterTest
             var content = "{\"a\": 1, \"b\": \"test\"}";
             var stream = new MemoryStream(Encoding.ASCII.GetBytes(content));
 
-            await formatter.WriteOutputAsync(stream, new JsonOutputFormatterOptions(false));
+            await formatter.WriteOutputAsync(stream);
             var expected = $"{content}{NewLine}";
 
             Assert.Equal(expected, tc.Output);
@@ -63,7 +63,7 @@ public sealed class JsonOutputFormatterTest
             var formatter = new JsonOutputFormatter(tc);
             Stream? stream = null;
 
-            await formatter.WriteOutputAsync(stream, new JsonOutputFormatterOptions(false));
+            await formatter.WriteOutputAsync(stream);
             var expected = "";
 
             Assert.Equal(expected, tc.Output);

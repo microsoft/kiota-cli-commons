@@ -24,7 +24,7 @@ public class NoneOutputFormatterTest
             Console.SetOut(outWriter);
             Console.SetError(errorWriter);
 
-            await formatter.WriteOutputAsync(stream, new OutputFormatterOptions());
+            await formatter.WriteOutputAsync(stream);
 
             Assert.Equal(0, sb.Length);
         }
@@ -41,7 +41,7 @@ public class NoneOutputFormatterTest
             Console.SetOut(outWriter);
             Console.SetError(errorWriter);
 
-            await formatter.WriteOutputAsync(stream, new OutputFormatterOptions());
+            await formatter.WriteOutputAsync(stream);
 
             Assert.Equal(0, sb.Length);
         }

@@ -6,9 +6,13 @@
 public enum FormatterType
 {
     /// <summary>
-    /// JSON format
+    /// Raw JSON format.
     /// </summary>
-    JSON,
+    RAW_JSON,
+    /// <summary>
+    /// Raw JSON format.
+    /// </summary>
+    PRETTY_JSON,
     /// <summary>
     /// Table format
     /// </summary>
@@ -18,7 +22,7 @@ public enum FormatterType
     /// </summary>
     TEXT,
     /// <summary>
-    /// No formatting
+    /// No output
     /// </summary>
     NONE
 }

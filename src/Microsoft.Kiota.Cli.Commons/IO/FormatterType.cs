@@ -10,7 +10,7 @@ public enum FormatterType
     /// </summary>
     RAW_JSON,
     /// <summary>
-    /// Raw JSON format.
+    /// Prettified JSON format.
     /// </summary>
     PRETTY_JSON,
     /// <summary>

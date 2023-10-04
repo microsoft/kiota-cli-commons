@@ -13,7 +13,7 @@ public sealed class OutputFormatterFactory : IOutputFormatterFactory
         return formatterType switch
         {
             FormatterType.RAW_JSON => new JsonOutputFormatter(new SystemConsole()),
-            FormatterType.PRETTY_JSON => new JsonOutputFormatter(new SystemConsole(), true),
+            FormatterType.JSON => new JsonOutputFormatter(new SystemConsole(), true),
             FormatterType.TABLE => new TableOutputFormatter(),
             FormatterType.TEXT => new TextOutputFormatter(new SystemConsole()),
             FormatterType.NONE => new NoneOutputFormatter(),

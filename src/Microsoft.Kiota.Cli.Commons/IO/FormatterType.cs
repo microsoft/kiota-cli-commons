@@ -12,7 +12,7 @@ public enum FormatterType
     /// <summary>
     /// Prettified JSON format.
     /// </summary>
-    PRETTY_JSON,
+    JSON,
     /// <summary>
     /// Table format
     /// </summary>

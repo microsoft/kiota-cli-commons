@@ -27,6 +27,7 @@ public class OutputFormatterFactoryTest
         }
 
         [Theory]
+        [InlineData(FormatterType.RAW_JSON, typeof(JsonOutputFormatter))]
         [InlineData(FormatterType.JSON, typeof(JsonOutputFormatter))]
         [InlineData(FormatterType.TABLE, typeof(TableOutputFormatter))]
         [InlineData(FormatterType.TEXT, typeof(TextOutputFormatter))]
@@ -42,7 +43,9 @@ public class OutputFormatterFactoryTest
         }
 
         [Theory]
-        [InlineData("json", typeof(JsonOutputFormatter))]
+        [InlineData("raw_json", typeof(JsonOutputFormatter))]
+        [InlineData("RAW_JSON", typeof(JsonOutputFormatter))]
+        [InlineData("JSON", typeof(JsonOutputFormatter))]
         [InlineData("JSON", typeof(JsonOutputFormatter))]
         [InlineData("table", typeof(TableOutputFormatter))]
         [InlineData("TABLE", typeof(TableOutputFormatter))]

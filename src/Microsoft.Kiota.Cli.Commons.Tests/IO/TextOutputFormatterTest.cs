@@ -22,7 +22,7 @@ public class TextOutputFormatterTest
             var content = "Test content";
             using var stream = new MemoryStream(Encoding.ASCII.GetBytes(content));
 
-            await formatter.WriteOutputAsync(stream, new OutputFormatterOptions());
+            await formatter.WriteOutputAsync(stream);
 
             Assert.Equal($"{content}{NewLine}", tc.Output);
         }
@@ -34,7 +34,7 @@ public class TextOutputFormatterTest
             var formatter = new TextOutputFormatter(tc);
             using var fs = File.OpenRead("data/long_text_file.txt");
 
-            await formatter.WriteOutputAsync(fs, new OutputFormatterOptions());
+            await formatter.WriteOutputAsync(fs);
 
             Assert.StartsWith($"Lorem ipsum", tc.Output);
             Assert.EndsWith($"sed nisi lacus sed.{NewLine}", tc.Output);
@@ -47,7 +47,7 @@ public class TextOutputFormatterTest
             var formatter = new TextOutputFormatter(tc);
             using var stream = Stream.Null;
 
-            await formatter.WriteOutputAsync(stream, new OutputFormatterOptions());
+            await formatter.WriteOutputAsync(stream);
 
             Assert.EndsWith($"{NewLine}", tc.Output);
         }

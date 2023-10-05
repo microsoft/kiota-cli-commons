@@ -34,7 +34,7 @@ public class TableOutputFormatter : IOutputFormatter
     }
 
     /// <inheritdoc />
-    public async Task WriteOutputAsync(Stream? content, IOutputFormatterOptions? options = null, CancellationToken cancellationToken = default) {
+    public async Task WriteOutputAsync(Stream? content, CancellationToken cancellationToken = default) {
         if (content == null)
         {
             return;

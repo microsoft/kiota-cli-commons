@@ -13,7 +13,7 @@ namespace Microsoft.Kiota.Cli.Commons.IO;
 public class NoneOutputFormatter : IOutputFormatter
 {
     /// <inheritdoc />
-    public Task WriteOutputAsync(Stream? content, IOutputFormatterOptions? options = null, CancellationToken cancellationToken = default)
+    public Task WriteOutputAsync(Stream? content, CancellationToken cancellationToken = default)
     {
         return Task.CompletedTask;
     }

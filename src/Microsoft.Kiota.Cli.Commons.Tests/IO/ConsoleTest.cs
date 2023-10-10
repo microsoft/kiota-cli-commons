@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text;
 using Microsoft.Kiota.Cli.Commons.IO;
 using Xunit;
 
@@ -9,28 +10,26 @@ public class ConsoleTest {
     [Fact]
     public void TestWrite()
     {
-        // Given
         var writer = new StringWriter();
         var console = new DefaultConsole(writer);
-    
-        // When
+
         console.Write("a test");
-    
-        // Then
         Assert.Equal("a test", writer.ToString());
     }
 
     [Fact]
     public void TestWriteLine()
     {
-        // Given
-        var writer = new StringWriter();
+        var sb = new StringBuilder();
+        var writer = new StringWriter(sb);
         var console = new DefaultConsole(writer);
     
-        // When
         console.WriteLine("a test");
-    
-        // Then
         Assert.Equal($"a test{writer.NewLine}", writer.ToString());
+
+        sb.Clear();
+
+        console.WriteLine();
+        Assert.Equal(writer.NewLine, writer.ToString());
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 
 namespace Microsoft.Kiota.Cli.Commons.IO;
 
@@ -25,25 +26,36 @@ public interface IConsole {
 }
 
 /// <summary>
-/// System console. Uses System.Console.* methods.
+/// Default console. Delegates to the provided System.IO.TextWriter.* methods.
 /// </summary>
-public class SystemConsole : IConsole
+public class DefaultConsole : IConsole
 {
+    private readonly TextWriter writer;
+
+    /// <summary>
+    /// Create a new console
+    /// </summary>
+    /// <param name="writer">A writer to delegate to for the created instance.</param>
+    public DefaultConsole(TextWriter writer)
+    {
+        this.writer = writer;
+    }
+
     /// <inheritdoc/>
     public void Write(string? value)
     {
-        Console.Write(value);
+        writer.Write(value);
     }
 
     /// <inheritdoc/>
     public void WriteLine(string? value)
     {
-        Console.WriteLine(value);
+        writer.WriteLine(value);
     }
 
     /// <inheritdoc/>
     public void WriteLine()
     {
-        Console.WriteLine();
+        writer.WriteLine();
     }
 }

@@ -12,10 +12,10 @@ public sealed class OutputFormatterFactory : IOutputFormatterFactory
     {
         return formatterType switch
         {
-            FormatterType.RAW_JSON => new JsonOutputFormatter(new SystemConsole()),
-            FormatterType.JSON => new JsonOutputFormatter(new SystemConsole(), true),
+            FormatterType.RAW_JSON => new JsonOutputFormatter(new DefaultConsole(Console.Out)),
+            FormatterType.JSON => new JsonOutputFormatter(new DefaultConsole(Console.Out), true),
             FormatterType.TABLE => new TableOutputFormatter(),
-            FormatterType.TEXT => new TextOutputFormatter(new SystemConsole()),
+            FormatterType.TEXT => new TextOutputFormatter(new DefaultConsole(Console.Out)),
             FormatterType.NONE => new NoneOutputFormatter(),
             _ => throw new ArgumentOutOfRangeException(nameof(formatterType), formatterType, INVALID_FORMATTER_ERROR),
         };

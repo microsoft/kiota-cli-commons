@@ -35,13 +35,13 @@ public class TextOutputFormatter : IOutputFormatter
         using var reader = new StreamReader(content);
         const int BUFFER_LENGTH = 4096;
         var charsReceived = 0;
+        var buffer = new char[BUFFER_LENGTH];
         do {
-            var buffer = new char[BUFFER_LENGTH];
             charsReceived = await reader.ReadAsync(buffer.AsMemory(0, buffer.Length), cancellationToken);
             if (charsReceived == 0) {
                 break;
             }
-            console.Write(new string(buffer, 0, charsReceived));
+            console.Write(new ReadOnlySpan<char>(buffer, 0, charsReceived));
         } while(charsReceived == BUFFER_LENGTH);
         console.WriteLine();
     }

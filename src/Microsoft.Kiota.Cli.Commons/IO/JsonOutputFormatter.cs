@@ -27,7 +27,6 @@ public class JsonOutputFormatter : IOutputFormatter
     /// <inheritdoc />
     public async Task WriteOutputAsync(Stream? content, CancellationToken cancellationToken = default)
     {
-        string resultStr;
         if (content == null || content == Stream.Null)
         {
             return;
@@ -35,9 +34,19 @@ public class JsonOutputFormatter : IOutputFormatter
 
         using var result = await ProcessJsonAsync(content, prettify, cancellationToken);
         using var r = new StreamReader(result);
-        resultStr = await r.ReadToEndAsync(cancellationToken);
+        // Read char array from stream.
+        const int BUFFER_LENGTH = 4096;
+        var charsReceived = 0;
+        var buffer = new char[BUFFER_LENGTH];
+        do {
+            charsReceived = await r.ReadAsync(buffer.AsMemory(0, buffer.Length), cancellationToken);
+            if (charsReceived == 0) {
+                break;
+            }
+            console.Write(new ReadOnlySpan<char>(buffer, 0, charsReceived));
+        } while(charsReceived == BUFFER_LENGTH);
 
-        console.WriteLine(resultStr);
+        console.WriteLine();
     }
 
     /// <summary>

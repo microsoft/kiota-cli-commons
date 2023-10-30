@@ -6,18 +6,31 @@ namespace Microsoft.Kiota.Cli.Commons.IO;
 /// <summary>
 /// Console abstraction to help unit test.
 /// </summary>
-public interface IConsole {
+public interface IConsole
+{
     /// <summary>
     /// Writes the specified string value to the standard output stream.
     /// </summary>
     /// <param name="value">The value to write.</param>
-    void Write (string? value);
+    void Write(string? value);
+
+    /// <summary>
+    /// Writes the specified character span to the standard output stream.
+    /// </summary>
+    /// <param name="value">The value to write.</param>
+    void Write(ReadOnlySpan<char> value);
 
     /// <summary>
     /// Writes the specified string value, followed by the current line terminator, to the standard output stream.
     /// </summary>
     /// <param name="value">The value to write.</param>
     void WriteLine(string? value);
+
+    /// <summary>
+    /// Writes the specified character span, followed by the current line terminator, to the standard output stream.
+    /// </summary>
+    /// <param name="value">The value to write.</param>
+    void WriteLine(ReadOnlySpan<char> value);
 
     /// <summary>
     /// Writes the current line terminator to the standard output stream.
@@ -48,7 +61,19 @@ public class DefaultConsole : IConsole
     }
 
     /// <inheritdoc/>
+    public void Write(ReadOnlySpan<char> value)
+    {
+        writer.Write(value);
+    }
+
+    /// <inheritdoc/>
     public void WriteLine(string? value)
+    {
+        writer.WriteLine(value);
+    }
+
+    /// <inheritdoc/>
+    public void WriteLine(ReadOnlySpan<char> value)
     {
         writer.WriteLine(value);
     }

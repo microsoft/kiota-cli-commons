@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Text;
 using Microsoft.Kiota.Cli.Commons.IO;
@@ -23,7 +24,17 @@ internal class TestConsole : IConsole
         tw.Write(value);
     }
 
+    public void Write(ReadOnlySpan<char> value)
+    {
+        tw.Write(value);
+    }
+
     public void WriteLine(string? value)
+    {
+        tw.WriteLine(value);
+    }
+
+    public void WriteLine(ReadOnlySpan<char> value)
     {
         tw.WriteLine(value);
     }

@@ -10,11 +10,17 @@ public class ConsoleTest {
     [Fact]
     public void TestWrite()
     {
-        var writer = new StringWriter();
+        var sb = new StringBuilder();
+        var writer = new StringWriter(sb);
         var console = new DefaultConsole(writer);
 
         console.Write("a test");
         Assert.Equal("a test", writer.ToString());
+
+        sb.Clear();
+
+        console.Write(new ReadOnlySpan<char>(new [] {'t', 'e', 's', 't'}));
+        Assert.Equal("test", writer.ToString());
     }
 
     [Fact]
@@ -26,6 +32,11 @@ public class ConsoleTest {
     
         console.WriteLine("a test");
         Assert.Equal($"a test{writer.NewLine}", writer.ToString());
+
+        sb.Clear();
+
+        console.WriteLine(new ReadOnlySpan<char>(new [] {'t', 'e', 's', 't'}));
+        Assert.Equal($"test{writer.NewLine}", writer.ToString());
 
         sb.Clear();
 

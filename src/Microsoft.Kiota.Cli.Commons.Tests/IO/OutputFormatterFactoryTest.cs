@@ -46,7 +46,6 @@ public class OutputFormatterFactoryTest
         [InlineData("raw_json", typeof(JsonOutputFormatter))]
         [InlineData("RAW_JSON", typeof(JsonOutputFormatter))]
         [InlineData("JSON", typeof(JsonOutputFormatter))]
-        [InlineData("JSON", typeof(JsonOutputFormatter))]
         [InlineData("table", typeof(TableOutputFormatter))]
         [InlineData("TABLE", typeof(TableOutputFormatter))]
         [InlineData("text", typeof(TextOutputFormatter))]

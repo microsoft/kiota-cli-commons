@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -64,7 +66,7 @@ public class JsonOutputFormatter : IOutputFormatter
         Stream cache = new MemoryStream();
         if (!input.CanSeek) {
             // copy the stream
-            await input.CopyToAsync(cache, cancellationToken);
+            await input.CopyToAsync(cache, cancellationToken).ConfigureAwait(false);
             cache.Position = 0;
         } else {
             cache = input;
@@ -72,9 +74,11 @@ public class JsonOutputFormatter : IOutputFormatter
 
         try
         {
-            var jsonDoc = await JsonDocument.ParseAsync(cache, default, cancellationToken);
+            var jsonDoc = await JsonDocument.ParseAsync(cache, default, cancellationToken).ConfigureAwait(false);
             var outputStream = new MemoryStream();
-            await JsonSerializer.SerializeAsync<object>(outputStream, jsonDoc, cancellationToken: cancellationToken, options: new() { WriteIndented = indent });
+            var utf8Writer = new Utf8JsonWriter(outputStream, new JsonWriterOptions { Indented = indent, SkipValidation = true }); //not disposing to avoid disposing underlying stream
+            jsonDoc.RootElement.WriteTo(utf8Writer);
+            await utf8Writer.FlushAsync(cancellationToken).ConfigureAwait(false);
             outputStream.Position = 0;
             return outputStream;
         }

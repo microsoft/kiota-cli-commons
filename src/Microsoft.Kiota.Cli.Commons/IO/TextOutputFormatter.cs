@@ -41,7 +41,7 @@ public class TextOutputFormatter : IOutputFormatter
             if (charsReceived == 0) {
                 break;
             }
-            console.Write(new ReadOnlySpan<char>(buffer, 0, charsReceived));
+            console.Write(buffer.AsSpan(0, charsReceived));
         } while(charsReceived == BUFFER_LENGTH);
         console.WriteLine();
     }

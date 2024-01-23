@@ -17,6 +17,18 @@ public class BaseCliRequestBuilder
     protected string UrlTemplate { get; set; }
 
     /// <summary>
+    /// The level in the command tree this request builder appears in.
+    /// This is used to skip adding arguments when they aren't needed.
+    /// </summary>
+    public int Level { get; set; } = 0;
+
+    /// <summary>
+    /// The arguments passed into the CLI.
+    /// This is used to decide what cli options to load.
+    /// </summary>
+    public string[] Arguments { get; set; } = [];
+
+    /// <summary>
     /// Instantiates a new <see cref="BaseCliRequestBuilder"/> class
     /// </summary>
     /// <param name="pathParameters">Path parameters for the request</param>

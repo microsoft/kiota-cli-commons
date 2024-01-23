@@ -1,4 +1,4 @@
-name: Build and deploy
+name: Build
 
 on:
   workflow_dispatch:
@@ -16,7 +16,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 7.0.x
+          dotnet-version: 8.x
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
@@ -39,18 +39,3 @@ jobs:
           name: drop
           path: |
             src/Microsoft.Kiota.Cli.Commons/bin/Release/*.nupkg
-  deploy:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-    environment:
-      name: staging_feeds
-    runs-on: ubuntu-latest
-    needs: [build]
-    steps:
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 7.0.x
-      - uses: actions/download-artifact@v3
-        with:
-          name: drop
-      - run: dotnet nuget push "*.nupkg" --skip-duplicate -s https://nuget.pkg.github.com/microsoft/index.json -k ${{ secrets.PUBLISH_GH_TOKEN }}

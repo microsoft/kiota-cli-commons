@@ -37,7 +37,7 @@
   <ItemGroup>
     <PackageReference Include="JmesPath.Net" Version="1.0.330" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Kiota.Abstractions" Version="1.7.8" />
+    <PackageReference Include="Microsoft.Kiota.Abstractions" Version="1.7.9" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     <PackageReference Include="Spectre.Console" Version="0.48.0" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />

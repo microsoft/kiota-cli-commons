@@ -29,7 +29,7 @@
     <PackageReleaseNotes>
     </PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <NoWarn>$(NoWarn);NU5048</NoWarn>
   </PropertyGroup>
@@ -45,7 +45,6 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="Microsoft.Kiota.Cli.Commons.Tests" />
-    <None Include="../../LICENSE" Pack="true" PackagePath="" />
     <None Include="../../README.md" Pack="true" PackagePath="" />
   </ItemGroup>
 </Project>

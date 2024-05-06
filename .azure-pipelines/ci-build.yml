@@ -74,6 +74,33 @@ extends:
 
           - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
             condition: and(contains(variables['build.sourceBranch'], 'refs/heads/main'), succeeded())
+            displayName: 'ESRP DLL Strong Name'
+            inputs:
+              ConnectedServiceName: 'microsoftgraph ESRP CodeSign DLL and NuGet (AKV)'
+              FolderPath: $(ProductBinPath)
+              Pattern: Microsoft.Kiota.Cli.Commons.dll
+              signConfigType: inlineSignParams
+              inlineOperation: |
+                [
+                    {
+                        "keyCode": "CP-233863-SN",
+                        "operationSetCode": "StrongNameSign",
+                        "parameters": [],
+                        "toolName": "sign",
+                        "toolVersion": "1.0"
+                    },
+                    {
+                        "keyCode": "CP-233863-SN",
+                        "operationSetCode": "StrongNameVerify",
+                        "parameters": [],
+                        "toolName": "sign",
+                        "toolVersion": "1.0"
+                    }
+                ]
+              SessionTimeout: 20
+
+          - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
+            condition: and(contains(variables['build.sourceBranch'], 'refs/heads/main'), succeeded())
             displayName: 'ESRP DLL CodeSigning'
             inputs:
               ConnectedServiceName: 'microsoftgraph ESRP CodeSign DLL and NuGet (AKV)'

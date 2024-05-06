@@ -196,7 +196,7 @@ extends:
                   displayName: 'Extract release information to pipeline'
                   inputs:
                     targetType: 'filePath'
-                    filePath: $(Pipeline.Workspace)\Nugets\scripts\GetNugetPackageVersion.ps1
+                    filePath: $(Pipeline.Workspace)\scripts\GetNugetPackageVersion.ps1
                     pwsh: true
                     arguments: '-packageDirPath "$(Pipeline.Workspace)/Nugets/"'
                 - task: 1ES.PublishNuget@1

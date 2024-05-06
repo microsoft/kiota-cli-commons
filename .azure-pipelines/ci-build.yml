@@ -45,12 +45,6 @@ extends:
             inputs:
               version: 8.x
 
-          - task: PoliCheck@1
-            displayName: 'Run PoliCheck "/src"'
-            inputs:
-              inputType: CmdLine
-              cmdLineArgs: '/F:$(Build.SourcesDirectory)/src /T:9 /Sev:"1|2" /PE:2 /O:poli_result_src.xml'
-
           # Install the nuget tool.
           - task: NuGetToolInstaller@1
             displayName: 'Install Nuget dependency manager'
@@ -73,65 +67,10 @@ extends:
               projects: '$(Build.SourcesDirectory)\Microsoft.Kiota.Cli.Commons.sln'
               arguments: '--configuration $(BuildConfiguration) --no-build'
 
-          - task: AntiMalware@3
-            displayName: 'Run MpCmdRun.exe - ProductBinPath'
-            inputs:
-              FileDirPath: '$(ProductBinPath)'
-            enabled: false
-
-          - task: BinSkim@4
-            displayName: 'Run BinSkim - Product Binaries'
-            inputs:
-              InputType: Basic
-              AnalyzeTargetGlob: '$(ProductBinPath)\**\*.dll'
-              AnalyzeSymPath: '$(ProductBinPath)'
-              AnalyzeVerbose: true
-              AnalyzeHashes: true
-              AnalyzeEnvironment: true
-
-          - task: PublishSecurityAnalysisLogs@2
-            displayName: 'Publish Security Analysis Logs'
-            inputs:
-              ArtifactName: SecurityLogs
-
-          - task: PostAnalysis@1
-            displayName: 'Post Analysis'
-            inputs:
-              BinSkim: true
-              CredScan: true
-              PoliCheck: true
-
           - task: UseDotNet@2
             displayName: 'Add .NET 2'
             inputs:
               version: 2.x
-
-          - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
-            condition: and(contains(variables['build.sourceBranch'], 'refs/heads/main'), succeeded())
-            displayName: 'ESRP DLL Strong Name'
-            inputs:
-              ConnectedServiceName: 'microsoftgraph ESRP CodeSign DLL and NuGet (AKV)'
-              FolderPath: $(ProductBinPath)
-              Pattern: Microsoft.Kiota.Cli.Commons.dll
-              signConfigType: inlineSignParams
-              inlineOperation: |
-                [
-                    {
-                        "keyCode": "CP-233863-SN",
-                        "operationSetCode": "StrongNameSign",
-                        "parameters": [],
-                        "toolName": "sign",
-                        "toolVersion": "1.0"
-                    },
-                    {
-                        "keyCode": "CP-233863-SN",
-                        "operationSetCode": "StrongNameVerify",
-                        "parameters": [],
-                        "toolName": "sign",
-                        "toolVersion": "1.0"
-                    }
-                ]
-              SessionTimeout: 20
 
           - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
             condition: and(contains(variables['build.sourceBranch'], 'refs/heads/main'), succeeded())
@@ -230,7 +169,7 @@ extends:
               Contents: 'scripts\**'
               TargetFolder: '$(Build.ArtifactStagingDirectory)/Nugets'
 
-          - task: PublishPipelineArtifact@1
+          - task: 1ES.PublishPipelineArtifact@1
             displayName: 'Upload Artifact: Nugets'
             inputs:
               artifactName: Nugets
@@ -260,10 +199,9 @@ extends:
                     filePath: $(Pipeline.Workspace)\Nugets\scripts\GetNugetPackageVersion.ps1
                     pwsh: true
                     arguments: '-packageDirPath "$(Pipeline.Workspace)/Nugets/"'
-                - task: NuGetCommand@2
+                - task: 1ES.PublishNuget@1
                   displayName: 'NuGet push'
                   inputs:
-                    command: push
                     packagesToPush: '$(Pipeline.Workspace)/Nugets/Microsoft.Kiota.Cli.Commons.*.nupkg'
                     nuGetFeedType: external
                     publishFeedCredentials: 'Kiota Nuget Connection'

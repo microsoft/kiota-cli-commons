@@ -202,6 +202,7 @@ extends:
                 - task: 1ES.PublishNuget@1
                   displayName: 'NuGet push'
                   inputs:
-                    packagesToPush: '$(Pipeline.Workspace)/Nugets/Microsoft.Kiota.Cli.Commons.*.nupkg'
+                    packagesToPush: '$(Pipeline.Workspace)/Microsoft.Kiota.Cli.Commons.*.nupkg'
                     nuGetFeedType: external
                     publishFeedCredentials: 'Kiota Nuget Connection'
+                    packageParentPath: '$(Pipeline.Workspace)'

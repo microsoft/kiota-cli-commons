@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Microsoft.Kiota.Cli.Commons.Http.Headers;
 
@@ -43,12 +42,12 @@ public sealed class InMemoryHeadersStore : BaseHeadersStore
     public bool IsConcurrent { get; }
 
     /// <inheritdoc />
-    public override IEnumerable<KeyValuePair<string, ICollection<string>>> GetHeaders() => _headers.AsEnumerable();
+    public override IEnumerable<KeyValuePair<string, ICollection<string>>> GetHeaders() => _headers;
 
     /// <inheritdoc />
     public override IEnumerable<KeyValuePair<string, ICollection<string>>> Drain()
     {
-        var existing = _headers.ToList();
+        var existing = new List<KeyValuePair<string, ICollection<string>>>(_headers);
         _headers.Clear();
         return existing;
     }

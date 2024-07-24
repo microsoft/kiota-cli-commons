@@ -119,9 +119,9 @@ public class ODataPagingServiceTest
         }
 
         [Theory]
-        [InlineData(null, "[20,21,24]", "[30]", "[20,21,24,30]")]
-        [InlineData("", "[20,21,24]", "[30]", "[20,21,24,30]")]
-        [InlineData("value", "{\"value\": [20]}", "{\"value\": [30]}", "{\"value\":[20,30]}")]
+        [InlineData(null, "[20,21,24]", "[30,32]", "[20,21,24,30,32]")]
+        [InlineData("", "[20,21,24]", "[30,32]", "[20,21,24,30,32]")]
+        [InlineData("value", "{\"value\": [20,21]}", "{\"value\": [30,32]}", "{\"value\":[20,21,30,32]}")]
         [InlineData("value", "{\"value\": [{\"a\": 1}, {\"a\": 2}]}", "{\"value\": [{\"b\": 4}]}", "{\"value\":[{\"a\":1},{\"a\":2},{\"b\":4}]}")]
         public async Task Return_Merged_Stream(string itemName, string left, string right, string expected)
         {

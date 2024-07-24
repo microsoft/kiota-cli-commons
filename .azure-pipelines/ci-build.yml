@@ -69,6 +69,7 @@ extends:
               arguments: '--configuration $(BuildConfiguration) --no-build'
 
           - task: UseDotNet@2
+            condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
             displayName: 'Add .NET 2'
             inputs:
               version: 2.x
@@ -155,8 +156,8 @@ extends:
             displayName: Dotnet pack
 
           - task: PowerShell@2
-            displayName: 'Validate project version has been incremented'
             condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
+            displayName: 'Validate project version has been incremented'
             inputs:
               targetType: 'filePath'
               filePath: $(System.DefaultWorkingDirectory)\scripts\ValidateProjectVersionUpdated.ps1
@@ -191,14 +192,15 @@ extends:
               SessionTimeout: 20
               
           - task: CopyFiles@2
-            displayName: 'Copy release scripts to artifact staging directory'
             condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
+            displayName: 'Copy release scripts to artifact staging directory'
             inputs:
               SourceFolder: '$(Build.SourcesDirectory)'
               Contents: 'scripts\**'
               TargetFolder: '$(Build.ArtifactStagingDirectory)/Nugets'
 
           - task: 1ES.PublishPipelineArtifact@1
+            condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
             displayName: 'Upload Artifact: Nugets'
             inputs:
               artifactName: Nugets

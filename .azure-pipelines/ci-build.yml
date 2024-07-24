@@ -74,7 +74,7 @@ extends:
               version: 2.x
 
           - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
-            condition: and(contains(variables['build.sourceBranch'], 'refs/heads/main'), succeeded())
+            condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
             displayName: 'ESRP DLL Strong Name'
             inputs:
               ConnectedServiceName: 'microsoftgraph ESRP CodeSign DLL and NuGet (AKV)'
@@ -101,7 +101,7 @@ extends:
               SessionTimeout: 20
 
           - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
-            condition: and(contains(variables['build.sourceBranch'], 'refs/heads/main'), succeeded())
+            condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
             displayName: 'ESRP DLL CodeSigning'
             inputs:
               ConnectedServiceName: 'microsoftgraph ESRP CodeSign DLL and NuGet (AKV)'
@@ -149,13 +149,14 @@ extends:
 
           # arguments are not parsed in DotNetCoreCLI@2 task for `pack` command, that's why we have a custom pack command here
           - pwsh: dotnet pack "$(ProjectFile)" /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg --no-build --output $env:BUILD_ARTIFACTSTAGINGDIRECTORY/Nugets --configuration $env:BUILD_CONFIGURATION
+            condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
             env:
               BUILD_CONFIGURATION: $(BuildConfiguration)
             displayName: Dotnet pack
 
           - task: PowerShell@2
             displayName: 'Validate project version has been incremented'
-            condition: and(contains(variables['build.sourceBranch'], 'refs/heads/main'), succeeded())
+            condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
             inputs:
               targetType: 'filePath'
               filePath: $(System.DefaultWorkingDirectory)\scripts\ValidateProjectVersionUpdated.ps1
@@ -163,7 +164,7 @@ extends:
               pwsh: true
 
           - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
-            condition: and(contains(variables['build.sourceBranch'], 'refs/heads/main'), succeeded())
+            condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
             displayName: 'ESRP CodeSigning Nuget Packages'
             inputs:
               ConnectedServiceName: 'microsoftgraph ESRP CodeSign DLL and NuGet (AKV)'
@@ -191,7 +192,7 @@ extends:
               
           - task: CopyFiles@2
             displayName: 'Copy release scripts to artifact staging directory'
-            condition: and(contains(variables['build.sourceBranch'], 'refs/heads/main'), succeeded())
+            condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
             inputs:
               SourceFolder: '$(Build.SourcesDirectory)'
               Contents: 'scripts\**'

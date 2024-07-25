@@ -71,7 +71,8 @@ public class ODataPagingService : BasePagingService
     {
         foreach (var contentType in contentTypes)
         {
-            if (contentType.Contains("json"))
+            if (contentType.Contains("json", StringComparison.OrdinalIgnoreCase))
+
             {
                 return true;
             }

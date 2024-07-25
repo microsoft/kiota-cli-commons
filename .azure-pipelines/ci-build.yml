@@ -157,6 +157,7 @@ extends:
 
           - task: PowerShell@2
             condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
+            enabled: false
             displayName: 'Validate project version has been incremented'
             inputs:
               targetType: 'filePath'

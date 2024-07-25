@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,6 +15,7 @@ namespace Microsoft.Kiota.Cli.Commons.IO;
 public class TableOutputFormatter : IOutputFormatter
 {
     private readonly IAnsiConsole _ansiConsole;
+    private const string CellValueIfMissing = "-";
 
     /// <summary>
     /// Creates a new table output formatter with a default console
@@ -53,7 +53,7 @@ public class TableOutputFormatter : IOutputFormatter
         var root = GetRootElement(document.RootElement);
         var firstElement = GetFirstElement(root);
 
-        IEnumerable<string> propertyNames = GetPropertyNames(firstElement);
+        List<string> propertyNames = [..GetPropertyNames(firstElement)];
         var table = new Table();
         table.Expand();
 
@@ -100,78 +100,55 @@ public class TableOutputFormatter : IOutputFormatter
 
     private static JsonElement GetFirstElement(JsonElement root) {
         var firstElement = root;
-        if (root.ValueKind == JsonValueKind.Array && root.GetArrayLength() > 0)
+        if (root.ValueKind != JsonValueKind.Array || root.GetArrayLength() <= 0) return firstElement;
+        var enumerated = root.EnumerateArray();
+        if (enumerated.MoveNext())
         {
-            var enumerated = root.EnumerateArray();
-            firstElement = enumerated.FirstOrDefault();
+            firstElement = enumerated.Current;
         }
-        
+
         return firstElement;
     }
 
     private static IEnumerable<string> GetPropertyNames(JsonElement firstElement) {
-        IEnumerable<string> propertyNames;
         if (firstElement.ValueKind != JsonValueKind.Object)
         {
-            propertyNames = new List<string> { "Value" };
+            yield return "Value";
         }
         else
         {
-            var restrictedValueKinds = new JsonValueKind[] {
-                    JsonValueKind.Array,
-                    JsonValueKind.Object
-                };
-            var objectEnumerator = firstElement.EnumerateObject();
-            var buffer = new List<string>();
-            foreach (var property in objectEnumerator)
+            foreach (var property in firstElement.EnumerateObject())
             {
-                if (restrictedValueKinds.Contains(property.Value.ValueKind)) {
-                    continue;
-                }
-
-                buffer.Add(property.Name);
+                if (property.Value.ValueKind is JsonValueKind.Array or JsonValueKind.Object) continue;
+                yield return property.Name;
             }
-            propertyNames = buffer;
         }
-        
-        return propertyNames;
     }
 
     private static IEnumerable<IRenderable> GetRowColumns(IEnumerable<string> propertyNames, JsonElement row)
     {
-        return propertyNames.Select(p =>
+        foreach (var columnName in propertyNames)
         {
-            var propertyName = p;
-            if (row.ValueKind == JsonValueKind.Object)
-            {
-                var hasProp = row.TryGetProperty(propertyName, out var property);
-                if (hasProp)
-                    return GetPropertyValue(property);
-                else
-                    return new Markup("-");
-            }
-
-            return GetPropertyValue(row);
-        });
+            yield return RenderCell(columnName, row);
+        }
+    }
+    
+    private static Markup RenderCell(string columnName, JsonElement row)
+    {
+        if (row.ValueKind != JsonValueKind.Object) return GetPropertyValue(row);
+        var hasProp = row.TryGetProperty(columnName, out var property);
+        return hasProp ? GetPropertyValue(property) : new Markup(CellValueIfMissing);
     }
 
-    private static IRenderable GetPropertyValue(JsonElement property)
+    private static Markup GetPropertyValue(JsonElement property)
     {
         var valueKind = property.ValueKind;
-        object? value = null;
-        switch (valueKind)
+        return valueKind switch
         {
-            case JsonValueKind.String:
-                value = property.GetString();
-                break;
-            case JsonValueKind.True:
-            case JsonValueKind.False:
-                value = property.GetBoolean();
-                break;
-            case JsonValueKind.Number:
-                value = property.GetDecimal();
-                break;
-        }
-        return new Markup(value?.ToString() ?? "-");
+            JsonValueKind.String => new Markup(property.GetString() ?? CellValueIfMissing),
+            JsonValueKind.True or JsonValueKind.False => new Markup(property.GetBoolean().ToString()),
+            JsonValueKind.Number => new Markup(property.GetDecimal().ToString(CultureInfo.InvariantCulture)),
+            _ => new Markup(CellValueIfMissing)
+        };
     }
 }

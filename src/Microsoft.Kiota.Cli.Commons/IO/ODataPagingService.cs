@@ -1,7 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
@@ -64,7 +63,22 @@ public class ODataPagingService : BasePagingService
 
     private static bool IsJson(PageLinkData pageLinkData)
     {
-        return pageLinkData.ResponseContentHeaders.TryGetValue("Content-Type", out var contentType) && contentType.Any(c => c.Contains("json"));
+        
+        return pageLinkData.ResponseContentHeaders.TryGetValue("Content-Type", out var contentTypes) && HasJsonContentType(contentTypes);
+    }
+
+    private static bool HasJsonContentType(IEnumerable<string> contentTypes)
+    {
+        foreach (var contentType in contentTypes)
+        {
+            if (contentType.Contains("json", StringComparison.OrdinalIgnoreCase))
+
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -84,9 +98,11 @@ public class ODataPagingService : BasePagingService
             return left ?? right;
         }
 
-        JsonNode? nodeLeft = JsonNode.Parse(left);
+        var taskLeft = JsonNode.ParseAsync(left, cancellationToken: cancellationToken);
+        var taskRight = JsonNode.ParseAsync(right, cancellationToken: cancellationToken);
+        var nodeLeft = await taskLeft;
+        var nodeRight = await taskRight;
         if (left.CanSeek) left.Seek(0, SeekOrigin.Begin);
-        JsonNode? nodeRight = JsonNode.Parse(right);
         if (right.CanSeek) right.Seek(0, SeekOrigin.Begin);
 
         JsonArray? leftArray = null;
@@ -114,13 +130,28 @@ public class ODataPagingService : BasePagingService
 
         if (leftArray != null && rightArray != null)
         {
-            var elements = rightArray.Where(i => i != null);
-            var item = elements.FirstOrDefault();
-            while (item != null)
+            var enumerator = rightArray.GetEnumerator();
+            try
             {
-                rightArray.Remove(item);
-                leftArray.Add(item);
-                item = elements.FirstOrDefault();
+                while (enumerator.MoveNext())
+                {
+                    var node = enumerator.Current;
+                    if (node == null) continue;
+                    if (rightArray.Remove(node))
+                    {
+                        leftArray.Add(node);
+                        enumerator.Dispose();
+                        enumerator = rightArray.GetEnumerator();
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Failed to modify a JSON stream.");
+                    }
+                }
+            }
+            finally
+            {
+                enumerator.Dispose();
             }
         }
         if (!string.IsNullOrWhiteSpace(itemName) && nodeLeft != null)
@@ -137,7 +168,9 @@ public class ODataPagingService : BasePagingService
         {
             var obj1 = nodeLeft as JsonObject;
             if (obj1?[nextLinkName] != null)
+            {
                 obj1.Remove(nextLinkName);
+            }
             if (nodeRight is JsonObject obj2 && obj2?[nextLinkName] != null)
             {
                 var nextLink = obj2[nextLinkName];
@@ -146,7 +179,7 @@ public class ODataPagingService : BasePagingService
             }
         }
         var stream = new MemoryStream();
-        using var writer = new Utf8JsonWriter(stream);
+        await using var writer = new Utf8JsonWriter(stream);
         nodeLeft?.WriteTo(writer);
         await writer.FlushAsync(cancellationToken);
         stream.Position = 0;

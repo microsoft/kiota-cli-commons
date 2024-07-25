@@ -147,7 +147,7 @@ public class TableOutputFormatter : IOutputFormatter
         {
             JsonValueKind.String => new Markup(property.GetString() ?? CellValueIfMissing),
             JsonValueKind.True or JsonValueKind.False => new Markup(property.GetBoolean().ToString()),
-            JsonValueKind.Number => new Markup(property.GetDecimal().ToString(CultureInfo.CurrentCulture)),
+            JsonValueKind.Number => new Markup(property.GetDecimal().ToString(CultureInfo.InvariantCulture)),
             _ => new Markup(CellValueIfMissing)
         };
     }

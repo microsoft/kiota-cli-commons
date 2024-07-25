@@ -31,9 +31,3 @@ jobs:
           name: codeCoverage
           path: |
             src/Microsoft.Kiota.Cli.Commons.Tests/TestResults
-      - name: Upload Nuget Package
-        uses: actions/upload-artifact@v4
-        with:
-          name: drop
-          path: |
-            src/Microsoft.Kiota.Cli.Commons/bin/Release/*.nupkg

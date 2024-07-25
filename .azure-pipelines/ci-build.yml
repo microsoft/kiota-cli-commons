@@ -7,6 +7,7 @@ trigger:
   branches:
     include:
       - main
+      - refs/tags/v*
 
 pr: none
 
@@ -68,12 +69,13 @@ extends:
               arguments: '--configuration $(BuildConfiguration) --no-build'
 
           - task: UseDotNet@2
+            condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
             displayName: 'Add .NET 2'
             inputs:
               version: 2.x
 
           - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
-            condition: and(contains(variables['build.sourceBranch'], 'refs/heads/main'), succeeded())
+            condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
             displayName: 'ESRP DLL Strong Name'
             inputs:
               ConnectedServiceName: 'microsoftgraph ESRP CodeSign DLL and NuGet (AKV)'
@@ -100,7 +102,7 @@ extends:
               SessionTimeout: 20
 
           - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
-            condition: and(contains(variables['build.sourceBranch'], 'refs/heads/main'), succeeded())
+            condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
             displayName: 'ESRP DLL CodeSigning'
             inputs:
               ConnectedServiceName: 'microsoftgraph ESRP CodeSign DLL and NuGet (AKV)'
@@ -148,13 +150,14 @@ extends:
 
           # arguments are not parsed in DotNetCoreCLI@2 task for `pack` command, that's why we have a custom pack command here
           - pwsh: dotnet pack "$(ProjectFile)" /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg --no-build --output $env:BUILD_ARTIFACTSTAGINGDIRECTORY/Nugets --configuration $env:BUILD_CONFIGURATION
+            condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
             env:
               BUILD_CONFIGURATION: $(BuildConfiguration)
             displayName: Dotnet pack
 
           - task: PowerShell@2
+            condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
             displayName: 'Validate project version has been incremented'
-            condition: and(contains(variables['build.sourceBranch'], 'refs/heads/main'), succeeded())
             inputs:
               targetType: 'filePath'
               filePath: $(System.DefaultWorkingDirectory)\scripts\ValidateProjectVersionUpdated.ps1
@@ -162,7 +165,7 @@ extends:
               pwsh: true
 
           - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
-            condition: and(contains(variables['build.sourceBranch'], 'refs/heads/main'), succeeded())
+            condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
             displayName: 'ESRP CodeSigning Nuget Packages'
             inputs:
               ConnectedServiceName: 'microsoftgraph ESRP CodeSign DLL and NuGet (AKV)'
@@ -189,21 +192,22 @@ extends:
               SessionTimeout: 20
               
           - task: CopyFiles@2
+            condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
             displayName: 'Copy release scripts to artifact staging directory'
-            condition: and(contains(variables['build.sourceBranch'], 'refs/heads/main'), succeeded())
             inputs:
               SourceFolder: '$(Build.SourcesDirectory)'
               Contents: 'scripts\**'
               TargetFolder: '$(Build.ArtifactStagingDirectory)/Nugets'
 
           - task: 1ES.PublishPipelineArtifact@1
+            condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
             displayName: 'Upload Artifact: Nugets'
             inputs:
               artifactName: Nugets
               targetPath: $(Build.ArtifactStagingDirectory)/Nugets
 
     - stage: deploy
-      condition: and(contains(variables['build.sourceBranch'], 'refs/heads/main'), succeeded())
+      condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
       dependsOn: build
       jobs:
         - deployment: deploy_cli_commons

@@ -74,11 +74,16 @@ extends:
             inputs:
               version: 2.x
 
-          - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
+          - task: EsrpCodeSigning@5
             condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
             displayName: 'ESRP DLL Strong Name'
             inputs:
-              ConnectedServiceName: 'microsoftgraph ESRP CodeSign DLL and NuGet (AKV)'
+              ConnectedServiceName: 'Federated DevX ESRP Managed Identity Connection'
+              AppRegistrationClientId: '65035b7f-7357-4f29-bf25-c5ee5c3949f8'
+              AppRegistrationTenantId: 'cdc5aeea-15c5-4db6-b079-fcadd2505dc2'
+              AuthAKVName: 'akv-prod-eastus'
+              AuthCertName: 'ReferenceLibraryPrivateCert'
+              AuthSignCertName: 'ReferencePackagePublisherCertificate'
               FolderPath: $(ProductBinPath)
               Pattern: Microsoft.Kiota.Cli.Commons.dll
               signConfigType: inlineSignParams
@@ -101,11 +106,16 @@ extends:
                 ]
               SessionTimeout: 20
 
-          - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
+          - task: EsrpCodeSigning@5
             condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
             displayName: 'ESRP DLL CodeSigning'
             inputs:
-              ConnectedServiceName: 'microsoftgraph ESRP CodeSign DLL and NuGet (AKV)'
+              ConnectedServiceName: 'Federated DevX ESRP Managed Identity Connection'
+              AppRegistrationClientId: '65035b7f-7357-4f29-bf25-c5ee5c3949f8'
+              AppRegistrationTenantId: 'cdc5aeea-15c5-4db6-b079-fcadd2505dc2'
+              AuthAKVName: 'akv-prod-eastus'
+              AuthCertName: 'ReferenceLibraryPrivateCert'
+              AuthSignCertName: 'ReferencePackagePublisherCertificate'
               FolderPath: src
               signConfigType: inlineSignParams
               inlineOperation: |
@@ -164,11 +174,16 @@ extends:
               arguments: '-projectPath "$(ProjectFile)" -packageName "Microsoft.Kiota.Cli.Commons"'
               pwsh: true
 
-          - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
+          - task: EsrpCodeSigning@5
             condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
             displayName: 'ESRP CodeSigning Nuget Packages'
             inputs:
-              ConnectedServiceName: 'microsoftgraph ESRP CodeSign DLL and NuGet (AKV)'
+              ConnectedServiceName: 'Federated DevX ESRP Managed Identity Connection'
+              AppRegistrationClientId: '65035b7f-7357-4f29-bf25-c5ee5c3949f8'
+              AppRegistrationTenantId: 'cdc5aeea-15c5-4db6-b079-fcadd2505dc2'
+              AuthAKVName: 'akv-prod-eastus'
+              AuthCertName: 'ReferenceLibraryPrivateCert'
+              AuthSignCertName: 'ReferencePackagePublisherCertificate'
               FolderPath: '$(Build.ArtifactStagingDirectory)/Nugets'
               Pattern: '*.nupkg'
               signConfigType: inlineSignParams
